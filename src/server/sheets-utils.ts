@@ -26,3 +26,21 @@ export function getFileUnderParentFolder(fileName, parentFolder) {
 export function getFolderUnderParentFolder(fileName, parentFolder) {
     return parentFolder.searchFolders("title contains '" + fileName + "'").next();
 }
+
+export function getColumnMap(sheet) {
+    var columnMap: { [columnName: string]: number } = {};
+    var columnNames = getFirstRowValue(sheet)
+    columnNames.forEach((element, index) => {
+        columnMap[element] = index+1
+    });
+    return columnMap;
+}
+
+function getFirstRowValue(sheet) {
+    return sheet.getActiveSheet().getRange(1, 1).getDataRegion(SpreadsheetApp.Dimension.COLUMNS).getValues()[0];
+}
+
+function getColumn(sheet,columnIndex,cellValue){
+
+
+}

@@ -1,17 +1,13 @@
 import React, {SetStateAction, useEffect, useState} from "react";
-import ReactDOM from "react-dom";
 import MUIDataTable from "mui-datatables";
 import CustomToolbarSelect from "./components/custom-toolbar-select";
-import InputLabel from '@material-ui/core/InputLabel';
 
-import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-
+import Loading from "./components/loading"
 import server from '../utils/server';
 
+
 const { serverFunctions } = server;
+
 
 function RequestList() {
 
@@ -20,17 +16,15 @@ function RequestList() {
   const [columns,setColumn] = useState([])
   const [isLoading,setLoading] = useState(true)
 
+  
   useEffect(() => {
     if(isLoading)
     serverFunctions.getRequestData()
-    .then( result=> {
+    .then(result=> {
       setColumn(result[0])
       setData(result.splice(1))
     setLoading(false)})
   })
-
-
-
 
 
   const options = {
@@ -46,8 +40,7 @@ function RequestList() {
   };
 
   return (
-      <MUIDataTable title={"Request list"} data={data} columns={columns} options={options} />
-
+     isLoading ? <Loading/> : <MUIDataTable title={"Request list"} data={data} columns={columns} options={options} />
   );
 }
 

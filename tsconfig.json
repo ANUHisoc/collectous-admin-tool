@@ -2,6 +2,8 @@
   "compilerOptions": {
     "types": ["gas-types-detailed"],
     "jsx": "react",
+    "moduleResolution": "node",
+    "target": "ES2020",  
     "esModuleInterop": true,
   }
 }

@@ -1,4 +1,4 @@
-import * as Util from "./utils"
+import * as Util from "./sheets-utils"
 
 // TODO handle errors;
 const REQUESTS_FILE_NAME = "requests";
@@ -6,7 +6,7 @@ const REQUESTS_FILE_NAME = "requests";
 
 
 
-function getRequestSheetFile() {
+export function getRequestSheetFile() {
     return Util.getFileUnderParentFolder(REQUESTS_FILE_NAME, Util.getAdminFolder());
 }
 

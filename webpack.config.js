@@ -183,6 +183,9 @@ const clientConfigs = clientEntrypoints.map(clientEntrypoint => {
       // this plugin allows us to add dynamically load packages from a CDN
       new DynamicCdnWebpackPlugin(DynamicCdnWebpackPluginConfig),
     ],
+    performance: {
+      hints: false
+    },
   };
 });
 
@@ -232,6 +235,9 @@ const devClientConfigs = clientEntrypoints.map(clientEntrypoint => {
       new HtmlWebpackInlineSourcePlugin(),
       new DynamicCdnWebpackPlugin({}),
     ],
+    performance: {
+      hints: false
+    },
   };
 });
 
@@ -311,9 +317,13 @@ const serverConfig = {
     }),
     new GasPlugin(),
   ],
+  performance: {
+    hints: false
+  },
 };
 
 module.exports = [
+
   // 1. Copy appsscript.json to destination,
   // 2. Set up webpack dev server during development
   // Note: devServer settings are only read in the first element when module.exports is an array
@@ -324,4 +334,6 @@ module.exports = [
   ...clientConfigs,
   // 5. Create a development dialog bundle for each client entrypoint during development.
   ...(isProd ? [] : devClientConfigs),
+
 ];
+

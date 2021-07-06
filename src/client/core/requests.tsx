@@ -35,7 +35,7 @@ function RequestList() {
     filter: true,
     selectableRows: 'multiple',
     filterType: "dropdown",
-    responsive: "vertical",
+    responsive: "simple",
     rowsPerPage: 10,
     selectToolbarPlacement: stp,
     customToolbarSelect: (selectedRows, displayData, setSelectedRows) => (

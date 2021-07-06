@@ -27,20 +27,28 @@ export function getFolderUnderParentFolder(fileName, parentFolder) {
     return parentFolder.searchFolders("title contains '" + fileName + "'").next();
 }
 
-export function getColumnMap(sheet) {
+export function getColumnMap(activeSheet) {
     var columnMap: { [columnName: string]: number } = {};
-    var columnNames = getFirstRowValue(sheet)
+    var columnNames = getHeaderValue(activeSheet)
     columnNames.forEach((element, index) => {
         columnMap[element] = index+1
     });
     return columnMap;
 }
 
-function getFirstRowValue(sheet) {
-    return sheet.getActiveSheet().getRange(1, 1).getDataRegion(SpreadsheetApp.Dimension.COLUMNS).getValues()[0];
+export function getHeaderValue(activeSheet): [] {
+    return activeSheet.getRange(1, 1).getDataRegion(SpreadsheetApp.Dimension.COLUMNS).getValues()[0];
 }
 
-function getColumn(sheet,columnIndex,cellValue){
+export function getRow(activeSheet, rowIndex): [] {
+    var lastColumn = activeSheet.getDataRange().getLastColumn()
+    return activeSheet.getRange(rowIndex,1,1,lastColumn).getValues()[0]
+  }
 
-
-}
+export function getColumn(activeSheet, columnIndex, isIncludingHeader?:boolean):[] {
+    var rowIndex = isIncludingHeader? 1 : 2;
+    var lastRow = activeSheet.getDataRange().getLastRow()
+    return activeSheet.getRange(rowIndex, columnIndex, lastRow, 1)
+      .getValues()
+      .flat()
+  }

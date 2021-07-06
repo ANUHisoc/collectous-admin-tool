@@ -1,4 +1,5 @@
 import * as Util from "./sheets-utils"
+import {REQUEST_SHEET_HEADER} from "./request-handler"
 
 // TODO handle errors;
 const REQUESTS_FILE_NAME = "requests";
@@ -19,7 +20,7 @@ function gatherRequest() {
 }
 
 export const getRequestData = () => {
-    var requestSpreadsheet = SpreadsheetApp.open(getRequestSheetFile());
+    var requestSpreadsheet = SpreadsheetApp.open(getRequestSheetFile()).getActiveSheet();
     return requestSpreadsheet.getDataRange().getValues();
 }
 

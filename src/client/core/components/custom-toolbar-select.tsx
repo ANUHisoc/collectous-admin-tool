@@ -20,17 +20,26 @@ function CustomToolbarSelect(props){
 
   var classes = useStyles();
 
+  function getSelectedGmailAddress(){    
+    var selectedGmailAddresses = [];
+    props.displayData.forEach((row, index) =>  {
+      if (props.selectedRows.data.find(selectedRow => selectedRow.dataIndex === index)) {   
+        selectedGmailAddresses.push(row.data[0]);
+      }
+    })
+    return selectedGmailAddresses;
+  }
+
   var handleRejectRequests = () => {
-    console.log(props.displayData)
-    var first = props.displayData[0].data[0]
-    serverFunctions.acceptRequests([first])
+   serverFunctions.rejectRequests(getSelectedGmailAddress());
+   props.setSelectedRows([]);
   };
+
 
   var handleAcceptRequests = () => {
-    var first = props.displayData[0].data[0]
-    serverFunctions.acceptRequests([first])
+    serverFunctions.acceptRequests(getSelectedGmailAddress());
+    props.setSelectedRows([]);
   };
-
 
     return (
       <div className={classes.iconContainer}>
@@ -49,5 +58,7 @@ function CustomToolbarSelect(props){
     );
   
 }
+
+
 
 export default CustomToolbarSelect;

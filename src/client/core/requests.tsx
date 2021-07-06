@@ -1,9 +1,10 @@
-import React, {SetStateAction, useEffect, useState} from "react";
+import React, { SetStateAction, useEffect, useState } from "react";
 import MUIDataTable from "mui-datatables";
 import CustomToolbarSelect from "./components/custom-toolbar-select";
 
 import Loading from "./components/loading"
 import server from '../utils/server';
+import { prettyPrint } from './util'
 
 
 const { serverFunctions } = server;
@@ -12,19 +13,22 @@ const { serverFunctions } = server;
 function RequestList() {
 
   const [stp, setStp] = useState("replace");
-  const [data,setData] = useState([])
-  const [columns,setColumn] = useState([])
-  const [isLoading,setLoading] = useState(true)
+  const [data, setData] = useState([])
+  const [columns, setColumn] = useState([])
+  const [isLoading, setLoading] = useState(true)
 
-  
+
   useEffect(() => {
-    if(isLoading)
-    serverFunctions.getRequestData()
-    .then(result=> {
-      setColumn(result[0])
-      setData(result.splice(1))
-    setLoading(false)})
-  })
+    if (isLoading) {
+      serverFunctions.getRequestData()
+        .then(result => {
+          setColumn(prettyPrint(result[0]))
+          setData(result.splice(1))
+          setLoading(false)
+        })
+    }
+  },[])
+
 
 
   const options = {
@@ -40,7 +44,7 @@ function RequestList() {
   };
 
   return (
-     isLoading ? <Loading/> : <MUIDataTable title={"Request list"} data={data} columns={columns} options={options} />
+    isLoading ? <Loading /> : <MUIDataTable title={"Request list"} data={data} columns={columns} options={options} />
   );
 }
 

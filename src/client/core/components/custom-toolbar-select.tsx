@@ -5,6 +5,7 @@ import ApproveIcon from '@material-ui/icons/CheckCircle';
 import server from '../../utils/server';
 import { makeStyles } from "@material-ui/core";
 import RejectIcon from '@material-ui/icons/Cancel';
+import { RequestStore } from "../repository/request";
 
 
 const { serverFunctions } = server;
@@ -31,13 +32,13 @@ function CustomToolbarSelect(props){
   }
 
   var handleRejectRequests = () => {
-   serverFunctions.rejectRequests(getSelectedGmailAddress());
+    props.store.reject()
    props.setSelectedRows([]);
   };
 
 
   var handleAcceptRequests = () => {
-    serverFunctions.acceptRequests(getSelectedGmailAddress());
+    props.store.accept()
     props.setSelectedRows([]);
   };
 

@@ -11,6 +11,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 const DynamicCdnWebpackPlugin = require('dynamic-cdn-webpack-plugin');
 const moduleToCdn = require('module-to-cdn');
+const { SourceMapDevToolPlugin } = require("webpack");
 
 /*********************************
  *    set up environment variables
@@ -68,6 +69,9 @@ const copyFilesConfig = {
     path: destination,
   },
   plugins: [
+    new SourceMapDevToolPlugin({
+      filename: "[file].map"
+    }),
     new CopyWebpackPlugin({
       patterns: [
         {
@@ -110,6 +114,7 @@ const clientConfig = {
           {
             loader: 'ts-loader',
           },
+          
         ],
       },
       {
@@ -128,6 +133,7 @@ const clientConfig = {
   },
 };
 
+const EXCEPTION = ['mobx']
 // DynamicCdnWebpackPlugin settings
 // these settings help us load 'react', 'react-dom' and the packages defined below from a CDN
 // see https://github.com/enuchi/React-Google-Apps-Script#adding-new-libraries-and-packages
@@ -136,10 +142,15 @@ const DynamicCdnWebpackPluginConfig = {
   verbose: false,
   resolver: (packageName, packageVersion, options) => {
     const packageSuffix = isProd ? '.min.js' : '.js';
+
+    if(!(EXCEPTION.includes(packageName))){
     const moduleDetails = moduleToCdn(packageName, packageVersion, options);
+    // console.log(moduleDetails)
     if (moduleDetails) {
       return moduleDetails;
     }
+  }
+
     // "name" should match the package being imported
     // "var" is important to get right -- this should be the exposed global. Look up "webpack externals" for info.
     switch (packageName) {
@@ -157,6 +168,14 @@ const DynamicCdnWebpackPluginConfig = {
           version: packageVersion,
           url: `https://unpkg.com/react-bootstrap@${packageVersion}/dist/react-bootstrap${packageSuffix}`,
         };
+        case 'mobx':
+          return {
+            name: packageName,
+            var: 'mobx',
+            version: packageVersion,
+            url: `https://unpkg.com/mobx@${packageVersion}/dist/mobx.umd.production.min.js`
+          };
+
       default:
         return null;
     }
@@ -186,6 +205,7 @@ const clientConfigs = clientEntrypoints.map(clientEntrypoint => {
     performance: {
       hints: false
     },
+    devtool: 'eval-source-map',
   };
 });
 
@@ -334,6 +354,7 @@ module.exports = [
   ...clientConfigs,
   // 5. Create a development dialog bundle for each client entrypoint during development.
   ...(isProd ? [] : devClientConfigs),
+
 
 ];
 

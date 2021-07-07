@@ -34,7 +34,7 @@ import indigo from '@material-ui/core/colors/indigo';
 
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-
+import { RequestStore } from './repository/request';
 
 
 {/* Reference: Uses responsive navbar boilerplate code*/ }
@@ -55,10 +55,14 @@ const NAMES_ICONS: { [id: string]: JSX.Element } = {
   "Settings": <SettingsIcon />,
 };
 
+
+const REQUEST_STORE = new RequestStore(["teste", "tetse1"], [[1,1], [2,5]])
 const ROUTE_PATHS: JSX.Element = (
   <div className="content">
     <Route exact path='/' component={Home} />
-    <Route path="/requests" component={Requests} />
+    <Route path="/requests"
+    render={(props) => (
+    <Requests  store = {REQUEST_STORE} {...props}/>)}  />
     <Route path="/collectors" component={Collectors} />
     <Route path="/update-form" component={UpdateForm} />
     <Route path="/analysis" component={Analysis} />

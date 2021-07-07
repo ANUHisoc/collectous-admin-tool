@@ -2,34 +2,30 @@ import { makeObservable, observable, action } from "mobx"
 
 
 
-class Request {
-    gmail:string = ""
-    name:string = ""
-    timeStamp:Date = null
-    isAccepted:Boolean = null
+export class RequestStore {
+   header: string[]
+   rows: string[][]
 
 
-    constructor(name,gmail,timeStamp,isAccepted) {
+    constructor(header,rows) {
+
         makeObservable(this, {
-            name: observable,
-            gmail: observable,
-            isAccepted: observable,
+            header: observable,
+            rows: observable,
             accept: action,
             reject: action
         })
         
-        this.gmail = gmail;
-        this.name = name;
-        this.timeStamp = timeStamp;
-        this.isAccepted = isAccepted
+        this.header = header
+        this.rows = rows
     }
 
     accept() {
-       
+       console.log("accepted")
     }
 
     reject(){
-
+        console.log("rejected")
     }
 
 }

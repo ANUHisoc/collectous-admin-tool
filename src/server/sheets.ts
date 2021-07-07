@@ -1,5 +1,5 @@
 import * as Util from "./sheets-utils"
-import {REQUEST_SHEET_HEADER} from "./request-handler"
+import {REQUEST_SHEET_HEADER} from "./handler/request"
 
 // TODO handle errors;
 const REQUESTS_FILE_NAME = "requests";

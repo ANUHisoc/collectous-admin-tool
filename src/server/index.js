@@ -1,6 +1,6 @@
 import * as publicUiFunctions from './ui';
 import * as publicSheetFunctions from './sheets';
-import * as publicRequestHandlerFunction from './request-handler'
+import * as publicRequestHandlerFunction from './handler/request'
 
 // Expose public functions by attaching to `global`
 global.doGet = publicUiFunctions.doGet;

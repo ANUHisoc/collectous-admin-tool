@@ -4,7 +4,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import ApproveIcon from '@material-ui/icons/CheckCircle';
 import { makeStyles } from "@material-ui/core";
 import RejectIcon from '@material-ui/icons/Cancel';
-import { RequestStore } from "../model/request";
+
 
 
 const useStyles = makeStyles({

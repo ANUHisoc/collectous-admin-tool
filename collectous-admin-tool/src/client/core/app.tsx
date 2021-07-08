@@ -14,7 +14,7 @@ import Settings from './components/settings';
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import { RequestStore } from './model/request';
-import { Login } from './model/login';
+import { UserValidation } from './model/user-validation';
 
 
 /* Reference: Uses responsive navbar boilerplate code*/
@@ -22,7 +22,7 @@ import { Login } from './model/login';
 
 /* Models */
 const REQUEST_STORE = new RequestStore()
-const LOGIN = new Login()
+const LOGIN = new UserValidation()
 
 const THEME = createMuiTheme({
   typography: { fontFamily: ['Roboto', 'Nunito', 'sans-serif'].join(','), }

@@ -7,17 +7,16 @@ import RejectIcon from '@material-ui/icons/Cancel';
 import { RequestStore } from "../repository/request";
 
 
-
 const useStyles = makeStyles({
   iconContainer: {
     marginRight: "24px",
   },
 })
 
-
 function CustomToolbarSelect(props) {
 
   var classes = useStyles();
+
 
   function getSelectedGmailAddress() {
     var selectedGmailAddresses = [];
@@ -54,7 +53,6 @@ function CustomToolbarSelect(props) {
           <ApproveIcon />
         </IconButton>
       </Tooltip>
-
     </div>
   );
 

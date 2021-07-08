@@ -33,9 +33,13 @@ const RequestList  = observer((props:React.PropsWithChildren<ComponentProps>) =>
     ),
   };
  
-  return <MUIDataTable title={"Request list"} columns={store.header} data={store.rows} options={options} />
+  return <MUIDataTable title={"Request list"} data={store.rows} columns={store.header}  options={options} />
   
 });
+
+
+
+
 
 
 export default RequestList;

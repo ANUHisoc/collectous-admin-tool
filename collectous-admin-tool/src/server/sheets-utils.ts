@@ -31,7 +31,7 @@ export function getColumnMap(activeSheet) {
     var columnMap: { [columnName: string]: number } = {};
     var columnNames = getHeaderValue(activeSheet)
     columnNames.forEach((element, index) => {
-        columnMap[element] = index+1
+        columnMap[element] = index + 1
     });
     return columnMap;
 }
@@ -42,13 +42,14 @@ export function getHeaderValue(activeSheet): [] {
 
 export function getRow(activeSheet, rowIndex): [] {
     var lastColumn = activeSheet.getDataRange().getLastColumn()
-    return activeSheet.getRange(rowIndex,1,1,lastColumn).getValues()[0]
-  }
+    return activeSheet.getRange(rowIndex, 1, 1, lastColumn)
+        .getValues()[0]
+}
 
-export function getColumn(activeSheet, columnIndex, isIncludingHeader?:boolean):[] {
-    var rowIndex = isIncludingHeader? 1 : 2;
+export function getColumn(activeSheet, columnIndex, isIncludingHeader?: boolean): [] {
+    var rowIndex = isIncludingHeader ? 1 : 2;
     var lastRow = activeSheet.getDataRange().getLastRow()
     return activeSheet.getRange(rowIndex, columnIndex, lastRow, 1)
-      .getValues()
-      .flat()
-  }
+        .getValues()
+        .flat()
+}

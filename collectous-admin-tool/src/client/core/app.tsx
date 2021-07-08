@@ -56,7 +56,7 @@ const NAMES_ICONS: { [id: string]: JSX.Element } = {
 };
 
 
-const REQUEST_STORE = new RequestStore(["teste", "tetse1"], [[1,1], [2,5]])
+const REQUEST_STORE = new RequestStore()
 const ROUTE_PATHS: JSX.Element = (
   <div className="content">
     <Route exact path='/' component={Home} />

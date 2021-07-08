@@ -15,12 +15,13 @@
 **Collectous** admin tool is a adminstrative tool for the Collectous system which enables data **collect**ion at an h**ous**ehold level to be done with ease.
 
 ### 📒 Documentation:
+- [Diagrams](https://miro.com/app/board/o9J_lZ8XwBU=/)
 -   [Product Backlog]()
 -   [Plans]()
 
 ### 🛠️ Tools used:
 
-- Framework/Libraries/APIs/Tools: React, Google app script, Mobx, Material-UI, MUI-Datatable and SheetQuery.
+- Framework/Libraries/APIs/Tools: React, Google app script, Mobx, Material-UI, MUI-Datatable and React-router.
 - Language(s): Typescript
 
 
@@ -29,4 +30,3 @@
 
 ### ⚙️ Installation:
 - See [this](https://github.com/enuchi/React-Google-Apps-Script)
-- For viewing the website, check out [this](https://script.google.com/macros/s/AKfycbzKAq5GEDwy-ltU_SF8GmfIWGzBlAxSDAVhX9kCfQffnpZFitE/exec).

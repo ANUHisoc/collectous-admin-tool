@@ -9,6 +9,13 @@ export function getCollectorsFolderIterator() {
         "sharedWithMe and title contains '" + APP_NAME + "' and mimeType = '" + FOLDER_MIME_TYPE + "'");
 }
 
+
+// TODO Given a root folder find any given folder that optionally checks the given condition (function)
+
+// TODO Given a root folder find any given file that optionally checks the given condition (function)
+
+
+
 export function getAdminFolder() {
     return getFolderUnderParentFolder(ADMIN_FOLDER_NAME, getParentFolder());
 }

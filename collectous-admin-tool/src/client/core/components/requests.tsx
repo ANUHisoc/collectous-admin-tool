@@ -1,10 +1,10 @@
 import React, { SetStateAction, useEffect, useState } from "react";
 import MUIDataTable from "mui-datatables";
-import CustomToolbarSelect from "./components/custom-toolbar-select";
+import CustomToolbarSelect from "../sub-components/custom-toolbar-select";
 
-import Loading from "./components/loading"
+import Loading from "../sub-components/loading"
 import { observer } from "mobx-react-lite"
-import { RequestStore } from "./repository/request";
+import { RequestStore } from "../model/request";
 
 
 

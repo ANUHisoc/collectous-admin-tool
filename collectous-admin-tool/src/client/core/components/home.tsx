@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Container from '@material-ui/core/Container';
 import Card from '@material-ui/core/Card';
-import DashboardCard from './components/dashboard-card';
+import DashboardCard from '../sub-components/dashboard-card';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

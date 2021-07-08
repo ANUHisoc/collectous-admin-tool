@@ -13,7 +13,6 @@ export class RequestStore {
 
 
     constructor() {
-
         makeObservable(this, {
             header: observable,
             rows: observable,
@@ -36,7 +35,7 @@ export class RequestStore {
     }
 
     accept() {
-        console.log("accepted")
+      // inject files to members  
     }
 
     reject() {
@@ -45,10 +44,8 @@ export class RequestStore {
 
     resume = () => {
         console.log("resume")
-
         this.fetchData()
         this.interval = setInterval(() => this.fetchData(), 7500)
-
     }
 
     suspend = () => {

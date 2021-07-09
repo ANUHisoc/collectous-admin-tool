@@ -1,6 +1,6 @@
 import { makeObservable, observable, action, onBecomeObserved, onBecomeUnobserved } from "mobx"
 import server from '../../utils/server';
-import { prettyPrint } from '../util'
+import { prettyPrint } from './util'
 
 const { serverFunctions } = server;
 
@@ -35,10 +35,11 @@ export class RequestStore {
     }
 
     accept() {
-      // inject files to members  
+      //TODO: inject files to members  
     }
 
     reject() {
+        //TODO: Show Snackbars
         console.log("rejected")
     }
 

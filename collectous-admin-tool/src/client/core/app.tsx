@@ -56,7 +56,7 @@ const ROUTE_PATHS: JSX.Element = (
   </div>);
 
 
-function Skeleton(props) {
+function App(props) {
   var { window } = props;
   var classes = useStyles();
 
@@ -86,4 +86,4 @@ function Skeleton(props) {
   );
 }
 
-export default Skeleton;
+export default App;

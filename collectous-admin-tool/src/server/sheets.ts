@@ -1,5 +1,7 @@
-import * as Util from "./sheets-utils"
+
+import { getAdminFolder,getFileUnderParentFolder } from "./drive-utils";
 import {REQUEST_SHEET_HEADER} from "./handler/request"
+
 
 // TODO handle errors;
 const REQUESTS_FILE_NAME = "requests";
@@ -8,7 +10,7 @@ const REQUESTS_FILE_NAME = "requests";
 
 
 export function getRequestSheetFile() {
-    return Util.getFileUnderParentFolder(REQUESTS_FILE_NAME, Util.getAdminFolder());
+    return getFileUnderParentFolder(REQUESTS_FILE_NAME, getAdminFolder());
 }
 
 

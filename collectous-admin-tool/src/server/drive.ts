@@ -1,4 +1,4 @@
-import { FOLDER_MIME_TYPE, getFolderUnderParentFolder, getParentFolder } from "./drive-utils";
+import { FOLDER_MIME_TYPE, getFolderUnderParentFolder, getParentFolder, getCurrentScriptFile } from "./drive-utils";
 
 const ADMIN_FOLDER_NAME = "admin";
 const APP_NAME = "Collectous";
@@ -11,6 +11,8 @@ export function getCollectorsFolderIterator() {
 export function getAdminFolder() {
     return getFolderUnderParentFolder(ADMIN_FOLDER_NAME, getParentFolder());
 }
+
+
 
 // TODO: Finalise data folder heirarchy for 4 type of people 
 // 1) script owner 2) admin and collector 3) collector 4) admin: collectous

@@ -3,24 +3,30 @@ import server from '../../utils/server';
 
 const { serverFunctions } = server;
 
-export class UserValidation {
-    isAuthenticating:boolean
-    isValidUser:boolean
+export class UserValidationModel {
+    isAuthenticating: boolean
+    isValidUser: boolean
 
-    constructor(){
+    constructor() {
+        makeObservable(this, {
+            isAuthenticating: observable,
+            isValidUser: observable,
+        })
         this.isValidUser = false
-        makeAutoObservable(this)  
+        this.isAuthenticating = true
         this.checkUser()
     }
 
-    checkUser(){
-        // TODO: check folder for admin, that is shared by the owner, who happens to be the owner of the script as well. 
-        // Then check data-collector file and match current user email id. 
-        
-        // TODO: Clarify on -- Not sure if file would be accesible via web app if it is under view-access
-        serverFunctions.getUserEmail()
-        .then(result=> {console.log(result)})
-        .catch(error => {console.log(error)})
+    checkUser() {
+        serverFunctions.isAdmin()
+            .then(result => {
+                // Some latency to show loading 
+                setInterval(() => {this.isValidUser = result
+                    this.isAuthenticating = false}, 2000)
+            })
+            .catch(error => {
+
+            })
     }
 
 }

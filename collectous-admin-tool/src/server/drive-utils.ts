@@ -1,4 +1,3 @@
-
 export const FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 export const SHEETS_MIME_TYPE = "application/vnd.google-apps.spreadsheet";
 
@@ -6,7 +5,7 @@ export const SHEETS_MIME_TYPE = "application/vnd.google-apps.spreadsheet";
 export function getFolders(rootFolder, condition, limit = 1) {
     var stack = [rootFolder]
     var result = []
-    do {
+    while ((stack.length !== 0) && (result.length < limit)){
         var folderIterator = stack.pop().getFolders()
         while (folderIterator.hasNext()) {
             var folder = folderIterator.next()
@@ -16,7 +15,6 @@ export function getFolders(rootFolder, condition, limit = 1) {
             }
         }
     }
-    while ((stack.length !== 0) && result.length < limit);
     return result;
 }
 
@@ -24,7 +22,7 @@ export function getFolders(rootFolder, condition, limit = 1) {
 export function getFiles(rootFolder, condition, limit = 1) {
     var stack = [rootFolder]
     var result = []
-    do {
+    while ((stack.length !== 0) && (result.length < limit)) {
         var folder = stack.pop()
         var fileIterator = folder.getFiles()
         while (fileIterator.hasNext()) {
@@ -40,7 +38,6 @@ export function getFiles(rootFolder, condition, limit = 1) {
             stack.push(folder)
         }
     }
-    while ((stack.length !== 0) && result.length < limit);
     return result;
 }
 
@@ -78,15 +75,16 @@ export function copyContent(sourceFolder, targetFolder, isSourceUnderTarget = fa
     };
   }
 
-// TODO: Check current script owner.
 
 
 
-
-export function getParentFolder() {
-    return DriveApp.getFileById(ScriptApp.getScriptId()).getParents().next();
+export function getCurrentScriptFile(){
+    return DriveApp.getFileById(ScriptApp.getScriptId())
 }
 
+export function getParentFolder() {
+    return getCurrentScriptFile().getParents().next();
+}
 
 export function getFileUnderParentFolder(fileName, parentFolder) {
     return parentFolder.searchFiles("title contains '" + fileName + "'").next();

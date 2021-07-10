@@ -21,18 +21,14 @@ export function getRow(activeSheet, rowIndex): [] {
         .getValues()[0]
 }
 
-export function getColumn(activeSheet, columnIndex, isIncludingHeader?: boolean): [] {
+
+
+export function getColumn(activeSheet, columnIndex, isIncludingHeader = false): [] {
     var rowIndex = isIncludingHeader ? 1 : 2;
     var lastRow = activeSheet.getDataRange().getLastRow()
     return activeSheet.getRange(rowIndex, columnIndex, lastRow, 1)
         .getValues()
         .flat()
 }
-export function getFileUnderParentFolder(REQUESTS_FILE_NAME: string, arg1: any) {
-    throw new Error("Function not implemented.");
-}
 
-export function getAdminFolder(): any {
-    throw new Error("Function not implemented.");
-}
 

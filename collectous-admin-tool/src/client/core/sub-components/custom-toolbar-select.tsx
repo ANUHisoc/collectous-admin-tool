@@ -29,15 +29,15 @@ function CustomToolbarSelect(props) {
   }
 
   var handleRejectRequests = () => {
-    console.log(props.store)
-    props.store.reject()
+    console.log(props.model)
+    props.model.reject()
     props.setSelectedRows([]);
   };
 
 
   var handleAcceptRequests = () => {
-    console.log(props.store)
-    props.store.accept()
+    console.log(props.model)
+    props.model.accept()
     props.setSelectedRows([]);
   };
 

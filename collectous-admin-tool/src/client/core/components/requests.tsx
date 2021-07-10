@@ -4,12 +4,12 @@ import CustomToolbarSelect from "../sub-components/custom-toolbar-select";
 
 import Loading from "../sub-components/loading"
 import { observer } from "mobx-react-lite"
-import { RequestStore } from "../model/request";
+import { RequestModel } from "../model/requests";
 
 
 
 type ComponentProps = {
-  store: RequestStore,
+  model: RequestModel,
   history: any,
   location: any,
   match: any,
@@ -17,10 +17,11 @@ type ComponentProps = {
 }
 
 const RequestList = observer((props: React.PropsWithChildren<ComponentProps>) => {
-  const { store, ...config } = props
-  const [stp, setStp] = useState("replace");
+  var { model, ...config } = props
+  var [stp, setStp] = useState("replace");
 
-  const options = {
+
+  var options = {
     filter: false,
     selectableRows: 'multiple',
     filterType: "dropdown",
@@ -28,16 +29,16 @@ const RequestList = observer((props: React.PropsWithChildren<ComponentProps>) =>
     rowsPerPage: 10,
     print: false,
     selectToolbarPlacement: stp,
-    onRowSelectionChange: ({}, allRowsSelected: [], {}) => {
-      store.updateIsOptionsSelected(allRowsSelected)
-      },
+    onRowSelectionChange: ({ }, allRowsSelected: [], { }) => {
+      model.updateIsOptionsSelected(allRowsSelected)
+    },
     customToolbarSelect: (selectedRows, displayData, setSelectedRows) => (
-      <CustomToolbarSelect selectedRows={selectedRows} displayData={displayData} setSelectedRows={setSelectedRows} store={store} />
+      <CustomToolbarSelect selectedRows={selectedRows} displayData={displayData} setSelectedRows={setSelectedRows} model={model} />
     ),
   };
 
-  var dataTable = <MUIDataTable title={"Request list"} data={store.rows} columns={store.header} options={options} />
-  return store.isLoading ? <Loading /> : dataTable
+  var dataTable = <MUIDataTable title={"Request list"} data={model.rows} columns={model.header} options={options} />
+  return model.isLoading ? <Loading /> : dataTable
 
 });
 

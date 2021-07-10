@@ -18,10 +18,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
-  function Home(props){
+
+  function Home(_props: any){
     const classes = useStyles();
     return(<div className={classes.root}>
-    
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <DashboardCard className={classes.paper} description="TODO: Show details about active collectors, collector invites" title="Status of Data Collectors">xs=12 sm=6</DashboardCard>
@@ -38,13 +38,6 @@ const useStyles = makeStyles((theme: Theme) =>
       </Grid>
     </div>);
   }
-
- 
-
-      // <div>
-      //   <DashboardCard title="Collectors Status" description="Test Test Test"/>
-      //   <h2>Home</h2>
-      // </div>
 
 
 export default Home;

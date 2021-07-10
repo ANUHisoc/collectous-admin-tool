@@ -49,13 +49,13 @@ const NAV_LINKS: string[] = Object.keys(NAMES_ICONS)
         .replace("home", ''));
 
 
-interface DrawerProps {
+interface ComponentProps {
     mobileState: [boolean, React.Dispatch<React.SetStateAction<boolean>>],
     container: any,
     theme: Theme,
 }
 
-export function CustomDrawer(props: DrawerProps) {
+export function CustomDrawer(props: ComponentProps) {
 
     var { mobileState: [mobileOpen, setMobileOpen], container, theme } = props
     var classes = useStyles();

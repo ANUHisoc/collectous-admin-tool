@@ -4,10 +4,11 @@ import { prettyPrint } from './util'
 
 const { serverFunctions } = server;
 
-export class RequestStore {
+export class RequestModel {
+    private interval: number
+
     header: string[]
     rows: string[][]
-    interval: number
     isLoading: boolean
     isOptionsSelected: boolean
 
@@ -35,7 +36,7 @@ export class RequestStore {
     }
 
     accept() {
-      //TODO: inject files to members  
+        //TODO: inject files to members  
     }
 
     reject() {

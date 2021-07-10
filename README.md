@@ -27,6 +27,7 @@
 
 ### 🔖 References/Credits:
 - [React-Google app script template/boilerplate setup code](https://github.com/enuchi/React-Google-Apps-Script)
+- [Preventing line breaks on hypen](https://stackoverflow.com/questions/8753296/how-to-prevent-line-break-at-hyphens-in-all-browsers)
 
 ### ⚙️ Installation:
 - See [this](https://github.com/enuchi/React-Google-Apps-Script)

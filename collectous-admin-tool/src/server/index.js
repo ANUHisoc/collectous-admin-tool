@@ -9,4 +9,5 @@ global.getRequestData = publicSheetFunctions.getRequestData;
 global.acceptRequests = publicRequestHandlerFunctions.acceptRequests;
 global.rejectRequests = publicRequestHandlerFunctions.rejectRequests;
 global.getUserEmail = publicUserFunctions.getUserEmail;
+global.isAdmin = publicUserFunctions.isAdmin; 
 

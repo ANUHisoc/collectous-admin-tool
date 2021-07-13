@@ -1,11 +1,13 @@
 import { makeObservable, observable, action, onBecomeObserved, onBecomeUnobserved } from "mobx"
-import server from '../../utils/server';
-import { prettyPrint } from './util'
 
+import { prettyPrint } from './util'
+import server from '../../utils/server';
+import { Table } from "../../../common/schema";
 const { serverFunctions } = server;
 
 export class RequestModel {
     private interval: number
+    private folderIds: string[]
 
     header: string[]
     rows: string[][]
@@ -59,12 +61,23 @@ export class RequestModel {
 
     }
 
+    /* Transferring some load from the server to the client, 
+       given that there are limitations on server operations and google could put extra limitations.
+       See limitations: https://developers.google.com/apps-script/guides/services/quotas#current_limitations */
+    processData(){
+        //TODO: extract folder ids.
+        
+
+
+    }
+
     fetchData = () => {
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
-            serverFunctions.getRequestData()
+            var requestTableName:Table = "requests" 
+            serverFunctions.getData(requestTableName)
                 .then(result => {
-                    console.log(result)
+                    //console.log(result)
                     this.header = prettyPrint(result[0])
                     this.rows = result.splice(1)
                     this.isLoading = false

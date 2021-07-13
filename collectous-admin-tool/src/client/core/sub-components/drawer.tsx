@@ -3,7 +3,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { indigo } from '@material-ui/core/colors';
-import { DRAWER_WIDTH } from '../app'
+import { DRAWER_WIDTH } from '../components/app'
 import { Hidden, List, ListItem, ListItemIcon, ListItemText, Theme } from '@material-ui/core';
 import { NavLink } from 'react-router-dom';
 import Drawer from '@material-ui/core/Drawer';

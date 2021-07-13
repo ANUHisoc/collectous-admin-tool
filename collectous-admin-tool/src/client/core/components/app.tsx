@@ -1,22 +1,22 @@
 import React, { useState } from 'react';
 import { Route, HashRouter } from 'react-router-dom';
-import CustomAppbar from './sub-components/appbar';
+import CustomAppbar from '../sub-components/appbar';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from './sub-components/drawer';
+import Drawer from '../sub-components/drawer';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Home from './components/home'
-import Requests from './components/requests'
-import Collectors from './components/collectors';
-import UpdateForm from './components/update-form';
-import Analysis from './components/analysis';
-import Settings from './components/settings';
-import UserValidation from './components/user-validation';
+import Home from './home'
+import Requests from './requests'
+import Collectors from './collectors';
+import UpdateForm from './update-form';
+import Analysis from './analysis';
+import Settings from './settings';
+import UserValidation from './user-validation';
 
 import { createTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
-import { RequestModel } from './model/requests';
-import { UserValidationModel } from './model/user-validation';
+import { RequestModel } from '../model/requests';
+import { UserValidationModel } from '../model/user-validation';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
 
@@ -46,7 +46,7 @@ let useStyles = makeStyles(theme => ({
   }
 }));
 
-
+// TODO add repair component
 const ROUTE_PATHS: JSX.Element = (
   <div className="content">
     <Route exact path='/' component={Home} />

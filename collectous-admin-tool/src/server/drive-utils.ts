@@ -1,11 +1,12 @@
 export const FOLDER_MIME_TYPE = "application/vnd.google-apps.folder";
 export const SHEETS_MIME_TYPE = "application/vnd.google-apps.spreadsheet";
+import Folder = GoogleAppsScript.Drive.Folder;
+import File = GoogleAppsScript.Drive.File;
 
-
-export function getFolders(rootFolder, condition, limit = 1) {
+export function getFolders(rootFolder:Folder, condition, limit = 1):Folder[] {
     var stack = [rootFolder]
     var result = []
-    while ((stack.length !== 0) && (result.length < limit)){
+    while ((stack.length !== 0) && (result.length < limit)) {
         var folderIterator = stack.pop().getFolders()
         while (folderIterator.hasNext()) {
             var folder = folderIterator.next()
@@ -19,7 +20,7 @@ export function getFolders(rootFolder, condition, limit = 1) {
 }
 
 
-export function getFiles(rootFolder, condition, limit = 1) {
+export function getFiles(rootFolder:Folder, condition, limit = 1):File[] {
     var stack = [rootFolder]
     var result = []
     while ((stack.length !== 0) && (result.length < limit)) {
@@ -43,54 +44,61 @@ export function getFiles(rootFolder, condition, limit = 1) {
 
 
 
-export function copyContent(sourceFolder, targetFolder, isSourceUnderTarget = false) {
+export function copyContent(sourceFolder:Folder, targetFolder:Folder, isSourceUnderTarget = false) {
     var sourceFolderStack = [sourceFolder]
     var currentTargetFolder = targetFolder
     var isRoot = true
-  
+
     while (sourceFolderStack.length !== 0) {
-      var currentSourceFolder = sourceFolderStack.pop()
-  
-      var folderIterator = currentSourceFolder.getFolders()
-      while (folderIterator.hasNext()) {
-        var folder = folderIterator.next()
-        sourceFolderStack.push(folder)
-      }
-  
-      if (isRoot) {
-        isRoot = false;
-        if (isSourceUnderTarget) {
-          currentTargetFolder = currentTargetFolder.createFolder(currentSourceFolder.getName())
-          continue;
+        var currentSourceFolder = sourceFolderStack.pop()
+
+        var folderIterator = currentSourceFolder.getFolders()
+        while (folderIterator.hasNext()) {
+            var folder = folderIterator.next()
+            sourceFolderStack.push(folder)
         }
-      }
-  
-      var fileIterator = currentSourceFolder.getFiles()
-      while (fileIterator.hasNext()) {
-        var file = fileIterator.next()
-        file.makeCopy(file.getName(), currentTargetFolder)
-      }
-      currentTargetFolder = currentTargetFolder.createFolder(currentSourceFolder.getName())
-  
+
+        if (isRoot) {
+            isRoot = false;
+            if (isSourceUnderTarget) {
+                currentTargetFolder = currentTargetFolder.createFolder(currentSourceFolder.getName())
+                continue;
+            }
+        }
+
+        var fileIterator = currentSourceFolder.getFiles()
+        while (fileIterator.hasNext()) {
+            var file = fileIterator.next()
+            file.makeCopy(file.getName(), currentTargetFolder)
+        }
+        currentTargetFolder = currentTargetFolder.createFolder(currentSourceFolder.getName())
+
     };
-  }
+}
 
 
+export function isDriveFolderTreeIdentical(sourceFolder:Folder, targetFolder:Folder) {
+    // TODO: Will be used to check if it is system compatible folder where the sourceFolder will be the template.
+}
 
 
-export function getCurrentScriptFile(){
+export function getFolder(id: string) {
+    return DriveApp.getFolderById(id)
+}
+
+export function getCurrentScriptFile():File {
     return DriveApp.getFileById(ScriptApp.getScriptId())
 }
 
-export function getParentFolder() {
+export function getParentFolder():Folder {
     return getCurrentScriptFile().getParents().next();
 }
 
-export function getFileUnderParentFolder(fileName, parentFolder) {
+export function getFileUnderParentFolder(fileName:string, parentFolder:Folder):File {
     return parentFolder.searchFiles("title contains '" + fileName + "'").next();
 }
 
 
-export function getFolderUnderParentFolder(fileName, parentFolder) {
-    return parentFolder.searchFolders("title contains '" + fileName + "'").next();
+export function getFolderUnderParentFolder(folderName:string, parentFolder:Folder):Folder {
+    return parentFolder.searchFolders("title contains '" + folderName + "'").next();
 }

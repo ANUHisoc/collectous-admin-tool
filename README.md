@@ -26,8 +26,10 @@
 
 
 ### 🔖 References/Credits:
-- [React-Google app script template/boilerplate setup code](https://github.com/enuchi/React-Google-Apps-Script)
-- [Preventing line breaks on hypen](https://stackoverflow.com/questions/8753296/how-to-prevent-line-break-at-hyphens-in-all-browsers)
+- Setup webpack config, folder level README and .gitignore from [React-Google app script template/boilerplate setup code](https://github.com/enuchi/React-Google-Apps-Script).
+- [Preventing line breaks on hypen](https://stackoverflow.com/questions/8753296/how-to-prevent-line-break-at-hyphens-in-all-browsers).
+- Learned to use const assertions to convert Array to literal type using this [SO answer](https://stackoverflow.com/a/54061487/11200630).
+
 
 ### ⚙️ Installation:
-- See [this](https://github.com/enuchi/React-Google-Apps-Script)
+- See [this](https://github.com/enuchi/React-Google-Apps-Script).

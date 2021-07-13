@@ -1,1 +1,0 @@
-export const REQUEST_SHEET_HEADER = ["gmail", "name", "time_stamp"]

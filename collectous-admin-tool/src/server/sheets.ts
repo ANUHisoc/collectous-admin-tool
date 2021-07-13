@@ -1,31 +1,49 @@
 
+
 import { getAdminFolder } from "./drive";
-import {getFileUnderParentFolder } from "./drive-utils";
-import {REQUEST_SHEET_HEADER} from "./handler/request"
+import { getFileUnderParentFolder } from "./drive-utils";
+import { Table } from "../common/schema";
+
+import Folder = GoogleAppsScript.Drive.Folder;
+import File = GoogleAppsScript.Drive.File;
+
+// TODO: handle errors;
 
 
-// TODO handle errors;
-const REQUESTS_FILE_NAME = "requests";
 
 
 
 
+function insert(table: Table) {
+    // TODO
+}
 
-export function getRequestSheetFile() {
-    return getFileUnderParentFolder(REQUESTS_FILE_NAME, getAdminFolder());
+
+function remove(table: Table) {
+    // TODO
+}
+
+
+export function getData(table: Table) {
+    var spreadSheetFile = getFileUnderParentFolder(table, getAdminFolder())
+    var sheet = SpreadsheetApp.open(spreadSheetFile).getActiveSheet();
+    return sheet.getDataRange().getValues()
+}
+
+function update(table: Table) {
+    // TODO
+}
+
+export function getSheetFile(table:Table):File {
+    return getFileUnderParentFolder(table, getAdminFolder());
 }
 
 
 function gatherRequest() {
-
-    console.log()
-    // TODO: Update new collectors in the requestSheet
+    // TODO: Update new collectors in the requestSheet ( NOTE: THis will be also used for time triggered events)
 }
 
-export const getRequestData = () => {
-    var requestSpreadsheet = SpreadsheetApp.open(getRequestSheetFile()).getActiveSheet();
-    return requestSpreadsheet.getDataRange().getValues();
-}
+
 
 function addNewCollectorToRequestSheet(files) {
     // TODO:add created at, name of the collector, gmail address.

@@ -142,7 +142,7 @@ const DynamicCdnWebpackPluginConfig = {
   verbose: false,
   resolver: (packageName, packageVersion, options) => {
     const packageSuffix = isProd ? '.min.js' : '.js';
-
+    console.log(packageName +" " + packageVersion + " " + options)
     if(!(EXCEPTION.includes(packageName))){
     const moduleDetails = moduleToCdn(packageName, packageVersion, options);
     // console.log(moduleDetails)
@@ -160,13 +160,6 @@ const DynamicCdnWebpackPluginConfig = {
           var: 'ReactTransitionGroup',
           version: packageVersion,
           url: `https://unpkg.com/react-transition-group@${packageVersion}/dist/react-transition-group${packageSuffix}`,
-        };
-      case 'react-bootstrap':
-        return {
-          name: packageName,
-          var: 'ReactBootstrap',
-          version: packageVersion,
-          url: `https://unpkg.com/react-bootstrap@${packageVersion}/dist/react-bootstrap${packageSuffix}`,
         };
         case 'mobx':
           return {

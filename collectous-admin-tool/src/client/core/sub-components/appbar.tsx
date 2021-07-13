@@ -11,7 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { indigo } from '@material-ui/core/colors';
-import { DRAWER_WIDTH } from '../app'
+import { DRAWER_WIDTH } from '../components/app'
 
 const useStyles = makeStyles(theme => ({
     appBar: {

@@ -17,7 +17,7 @@ function getCollectorsFolderIterator() {
 
 export function getCollectorFolder(gmailAddress: string):  Folder {
     var folderIterator = DriveApp.searchFolders(
-        "sharedWithMe and title contains '" + APP_NAME + "' and mimeType = '" + FOLDER_MIME_TYPE + "'" + "and" + gmailAddress + "in owners")
+        "sharedWithMe and title contains '" + APP_NAME + "' and mimeType = '" + FOLDER_MIME_TYPE + "'" + "and '" + gmailAddress + "' in owners")
     if (folderIterator.hasNext()) {
         return folderIterator.next();
     }
@@ -42,6 +42,8 @@ export function getAdminSpreadSheetFile(table:Table):File{
 
 export function injectTemplates(gmailAddress: string) {
     var folder = getCollectorFolder(gmailAddress);
+    Logger.log(gmailAddress)
+    Logger.log(folder)
     copyContent(getDataCollectorTemplateFolder(), folder)
 }
 

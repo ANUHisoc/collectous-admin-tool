@@ -54,24 +54,24 @@ export class Repository {
                     }
                 }
             }
-            
+
             throw new InvalidSearchQuery("Given query is " + query.toString())
         }
         throw new InvalidPrimaryKey("Given primary key" + primaryKey + " is invalid.")
     }
 
 
-    public deleteRow(table: Table, query: SearchQuery,rowIndex?:number):Promise<void> {
-        if(rowIndex===undefined){
-            rowIndex =this.getRowIndex(table,query)
+    public deleteRow(table: Table, query: SearchQuery, rowIndex?: number): Promise<void> {
+        if (rowIndex === undefined) {
+            rowIndex = this.getRowIndex(table, query)
         }
-        return serverFunctions.deleteRow(table,rowIndex+2)
+        return serverFunctions.deleteRow(table, rowIndex + 2)
     }
 
-    public async fetchData(table: Table,isForced?:boolean): Promise<FetchedData> {
+    public async fetchData(table: Table, isForced?: boolean): Promise<FetchedData> {
         var recentlastModified: Date = await this.fetchLastModified(table)
-        console.log("this recent modified "+recentlastModified);
-        console.log("this last modified "+this.dataObject[table].lastModified )
+        console.log("this recent modified " + recentlastModified);
+        console.log("this last modified " + this.dataObject[table].lastModified)
         if (isForced || this.dataObject[table].lastModified === undefined
             || recentlastModified > this.dataObject[table].lastModified) {
 
@@ -86,9 +86,14 @@ export class Repository {
         } else {
 
             console.log("Returning cache")
-            return new Promise(() => { return this.dataObject[table].data; })
-        }
+            return new Promise(() => {
+                (resolve, reject: any) => {
+                    console.log(this.dataObject[table].data)
+                    return this.dataObject[table].data;
+                }
+            })
 
+        }
     }
 
     private updateDataObject(table: Table, data?: object[][], lastModified?: Date) {

@@ -41,7 +41,7 @@ function CustomToolbarSelect(props) {
 
   var handleAcceptRequests = () => {
     //console.log(props.model)
-    //props.model.accept(getSelectedGmailAddress())
+    props.model.accept(getSelectedGmailAddress())
     props.setSelectedRows([]);
   };
 

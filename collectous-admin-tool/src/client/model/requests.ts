@@ -43,15 +43,16 @@ export class RequestModel {
     accept(gmailAddresses: string[]) {
         //TODO: inject files to members  
         console.log("accepting address" + gmailAddresses)
-        for (let gmailAddress in gmailAddresses) {
+        gmailAddresses.forEach((gmailAddress) =>
             serverFunctions
                 .injectTemplates(gmailAddress)
                 .then(result => {
                     console.log(result)
                 })
                 .then(this.removeRow(gmailAddress))
-                .catch(error => console.log(error))
-        }
+                .catch(error => console.log(error)))
+
+
 
     }
 
@@ -63,7 +64,7 @@ export class RequestModel {
         console.log(rowIndex)
         // console.log(this.rows.splice(rowIndex, 1))
         // this.rows = this.rows.splice(rowIndex, 1)
-       await Repository
+        await Repository
             .getInstance()
             .deleteRow("requests", query, rowIndex)
         this.fetchData(true)
@@ -92,23 +93,23 @@ export class RequestModel {
     }
 
 
-    fetchData(isForced=false){
+    fetchData(isForced = false) {
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
-            if (isForced || !this.isFetching) {
-                console.log("isForced " +isForced)
-                Repository
-                    .getInstance()
-                    .fetchData("requests",isForced)
-                    .then((data: FetchedData) => {
-                        // TODO: Check if data has changed or not before assigning value
-                        this.header = prettyPrint(data.columns)
-                        this.rows = data.rows
-                        this.isLoading = false
-                        this.isFetching = false
-                    })
-                    .catch(error => console.error("Error retrieving request data " + error.toString()))
-            }
+            console.log("isForced " + isForced)
+            Repository
+                .getInstance()
+                .fetchData("requests", isForced)
+                .then((data) => {
+                    // TODO: Check if data has changed or not before assigning value
+                    console.log(data)
+                    this.header = prettyPrint(data.columns)
+                    this.rows = data.rows
+                    this.isLoading = false
+                    this.isFetching = false
+                })
+                .catch(error => console.error("Error retrieving request data " + error.toString()))
+
         }
     }
 

@@ -68,11 +68,11 @@ export class Repository {
         return serverFunctions.deleteRow(table,rowIndex+2)
     }
 
-    public async fetchData(table: Table): Promise<FetchedData> {
+    public async fetchData(table: Table,isForced?:boolean): Promise<FetchedData> {
         var recentlastModified: Date = await this.fetchLastModified(table)
         console.log("this recent modified "+recentlastModified);
         console.log("this last modified "+this.dataObject[table].lastModified )
-        if (this.dataObject[table].lastModified === undefined
+        if (isForced || this.dataObject[table].lastModified === undefined
             || recentlastModified > this.dataObject[table].lastModified) {
 
             console.log("Actually fetching data")

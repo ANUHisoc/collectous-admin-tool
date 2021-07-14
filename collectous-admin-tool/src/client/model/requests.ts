@@ -55,7 +55,7 @@ export class RequestModel {
 
     }
 
-    removeRow(gmailAddress: string) {
+    async removeRow(gmailAddress: string) {
         var repository = Repository.getInstance();
         console.log("removing row" + gmailAddress)
         var query: SearchQuery = { primaryKey: ["gmail"], value: [gmailAddress] };
@@ -63,9 +63,10 @@ export class RequestModel {
         console.log(rowIndex)
         // console.log(this.rows.splice(rowIndex, 1))
         // this.rows = this.rows.splice(rowIndex, 1)
-        Repository
+       await Repository
             .getInstance()
             .deleteRow("requests", query, rowIndex)
+        this.fetchData(true)
     }
 
 
@@ -79,7 +80,7 @@ export class RequestModel {
     resume = () => {
         console.log("resume")
         this.fetchData()
-        this.interval = setInterval(() => this.fetchData(), 20000)
+        this.interval = setInterval(() => this.fetchData(), 7500)
     }
 
     suspend = () => {
@@ -88,17 +89,17 @@ export class RequestModel {
         this.rows = undefined
         clearInterval(this.interval)
         this.isLoading = true
-
     }
 
 
-    fetchData = () => {
+    fetchData(isForced=false){
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
-            if (!this.isFetching) {
+            if (isForced || !this.isFetching) {
+                console.log("isForced " +isForced)
                 Repository
                     .getInstance()
-                    .fetchData("requests")
+                    .fetchData("requests",isForced)
                     .then((data: FetchedData) => {
                         // TODO: Check if data has changed or not before assigning value
                         this.header = prettyPrint(data.columns)

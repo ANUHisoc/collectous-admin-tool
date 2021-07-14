@@ -3,7 +3,7 @@ import * as publicSheetFunctions from './sheets';
 import * as publicRequestHandlerFunctions from './handler/request'
 import * as publicUserFunctions from './user'
 import * as publicDriveUtilFunctions from './drive-utils'
-
+import * as publicDriveFunctions from './drive'
 
 
 /* Expose public functions by attaching to `global`
@@ -18,14 +18,14 @@ global.doGet = publicUiFunctions.doGet;
 global.getData = publicSheetFunctions.getData;
 
 
-global.acceptRequests = publicRequestHandlerFunctions.acceptRequests;
-global.rejectRequests = publicRequestHandlerFunctions.rejectRequests;
+global.injectTemplates = publicDriveFunctions.injectTemplates;
+
 
 
 
 global.getUserEmail = publicUserFunctions.getUserEmail;
 global.isAdmin = publicUserFunctions.isAdmin;
 
-global.getFolder = publicDriveUtilFunctions.getFolder
+
 
 

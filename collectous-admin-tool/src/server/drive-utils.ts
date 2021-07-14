@@ -77,8 +77,9 @@ export function copyContent(sourceFolder:Folder, targetFolder:Folder, isSourceUn
 }
 
 
-export function isDriveFolderTreeIdentical(sourceFolder:Folder, targetFolder:Folder) {
+export function isDriveFolderTreeIdentical(sourceFolder:Folder, targetFolder:Folder):boolean {
     // TODO: Will be used to check if it is system compatible folder where the sourceFolder will be the template.
+    return false;
 }
 
 

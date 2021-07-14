@@ -1,34 +1,55 @@
-import { FOLDER_MIME_TYPE, getFolderUnderParentFolder, getParentFolder, getCurrentScriptFile } from "./drive-utils";
+import { Table } from "../common/schema";
+import { FOLDER_MIME_TYPE, getFolderUnderParentFolder, getParentFolder, getCurrentScriptFile, copyContent, getFileUnderParentFolder } from "./drive-utils";
 import Folder = GoogleAppsScript.Drive.Folder;
+import File = GoogleAppsScript.Drive.File;
+
 
 
 const ADMIN_FOLDER_NAME = "admin";
+const DATA_COLLECTOR_TEMPLATE_FOLDER_NAME = "data-collector-template"
 const APP_NAME = "Collectous";
 
-export function getCollectorsFolderIterator() {
+function getCollectorsFolderIterator() {
     return DriveApp.searchFolders(
         "sharedWithMe and title contains '" + APP_NAME + "' and mimeType = '" + FOLDER_MIME_TYPE + "'");
 }
+
+
+export function getCollectorFolder(gmailAddress: string):  Folder {
+    var folderIterator = DriveApp.searchFolders(
+        "sharedWithMe and title contains '" + APP_NAME + "' and mimeType = '" + FOLDER_MIME_TYPE + "'" + "and" + gmailAddress + "in owners")
+    if (folderIterator.hasNext()) {
+        return folderIterator.next();
+    }
+}
+
 
 export function getAdminFolder() {
     // TODO: Consider the situation where admin is not the actual owner of the running script
     return getFolderUnderParentFolder(ADMIN_FOLDER_NAME, getParentFolder());
 }
 
-export function getLastModified(): Date {
-    // TODO
-    return undefined
+
+export function getLastModified(table:Table): Date {
+    return getAdminSpreadSheetFile(table).getLastUpdated();
 }
 
 
-export function injectTemplates(gmailAddresses: string[]): boolean {
-    // TODO : return true if successfully injected
-    return false;
+export function getAdminSpreadSheetFile(table:Table):File{
+   return getFileUnderParentFolder(table, getAdminFolder());
 }
 
-function getCollectorFolder(gmail: string): Folder {
-    return undefined;
+
+export function injectTemplates(gmailAddress: string) {
+    var folder = getCollectorFolder(gmailAddress);
+    copyContent(getDataCollectorTemplateFolder(), folder)
 }
+
+
+function getDataCollectorTemplateFolder(): Folder {
+    return getFolderUnderParentFolder(DATA_COLLECTOR_TEMPLATE_FOLDER_NAME, getParentFolder());
+}
+
 
 // TODO: Get Collectors's collectous folder, given a gmail address.
 
@@ -46,4 +67,4 @@ function getCollectorFolder(gmail: string): Folder {
 // 1) collectous? -- collectous-admin-tool | collectous-collected? 
 // 2) same as 1) but collectous-admin-tool under shared with me.
 // 3) collectous-collected
-// 4) Nothing, only collectous-admin-tool under shared with me.
+// 4) Nothing, only collectous-admin-tool under shared with me

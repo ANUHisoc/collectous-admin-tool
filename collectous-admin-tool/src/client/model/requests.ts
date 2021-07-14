@@ -1,13 +1,13 @@
 import { makeObservable, observable, action, onBecomeObserved, onBecomeUnobserved } from "mobx"
 
 import { prettyPrint } from './util'
-import server from '../../utils/server';
-import { Table } from "../../../common/schema";
+import server from '../server';
+import { Table } from "../../common/schema";
 const { serverFunctions } = server;
 
 export class RequestModel {
     private interval: number
-    private folderIds: string[]
+    
 
     header: string[]
     rows: string[][]
@@ -37,8 +37,17 @@ export class RequestModel {
         this.isOptionsSelected = selectedRows.length !== 0
     }
 
-    accept() {
+    accept(gmailAddresses: string[]) {
         //TODO: inject files to members  
+        for (let gmailAddress in gmailAddresses) {
+            serverFunctions.injectTemplates(gmailAddress)
+                .then(result => {
+                    console.log(result)
+
+
+                })
+                .catch(error => console.log(error))
+        }
     }
 
     reject() {
@@ -64,9 +73,9 @@ export class RequestModel {
     /* Transferring some load from the server to the client, 
        given that there are limitations on server operations and google could put extra limitations.
        See limitations: https://developers.google.com/apps-script/guides/services/quotas#current_limitations */
-    processData(){
+    processData() {
         //TODO: extract folder ids.
-        
+
 
 
     }
@@ -74,7 +83,7 @@ export class RequestModel {
     fetchData = () => {
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
-            var requestTableName:Table = "requests" 
+            var requestTableName: Table = "requests"
             serverFunctions.getData(requestTableName)
                 .then(result => {
                     //console.log(result)

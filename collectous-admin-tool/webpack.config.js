@@ -45,9 +45,9 @@ const devDialogEntry = './dev/index.js';
 const clientEntrypoints = [
   {
     name: 'CLIENT - core',
-    entry: './src/client/core/index.tsx',
+    entry: './src/client/index.tsx',
     filename: 'index', 
-    template: './src/client/core/index.html',
+    template: './src/client/index.html',
   }
 ];
 
@@ -142,7 +142,7 @@ const DynamicCdnWebpackPluginConfig = {
   verbose: false,
   resolver: (packageName, packageVersion, options) => {
     const packageSuffix = isProd ? '.min.js' : '.js';
-    console.log(packageName +" " + packageVersion + " " + options)
+   // console.log(packageName +" " + packageVersion + " " + options)
     if(!(EXCEPTION.includes(packageName))){
     const moduleDetails = moduleToCdn(packageName, packageVersion, options);
     // console.log(moduleDetails)

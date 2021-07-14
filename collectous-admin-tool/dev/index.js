@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import server from '../src/client/utils/server';
+import server from '../src/client/server';
 
 const { serverFunctions } = server;
 

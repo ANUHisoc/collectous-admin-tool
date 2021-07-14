@@ -1,11 +1,12 @@
 
 
-import { getAdminFolder } from "./drive";
+import { getAdminFolder, getAdminSpreadSheetFile } from "./drive";
 import { getFileUnderParentFolder } from "./drive-utils";
-import { Table } from "../common/schema";
+import { Column, SCHEMA, Table } from "../common/schema";
 
 import Folder = GoogleAppsScript.Drive.Folder;
 import File = GoogleAppsScript.Drive.File;
+import { isArrayEqual } from "../common/util";
 
 // TODO: handle errors;
 
@@ -19,24 +20,21 @@ function insert(table: Table) {
 }
 
 
-function remove(table: Table) {
-    // TODO
+function remove(table: Table, isEntireRow:boolean) {
+// TODO: Use Sheet deleteRow() if isEntireRow
 }
 
 
 export function getData(table: Table) {
-    var spreadSheetFile = getFileUnderParentFolder(table, getAdminFolder())
-    var sheet = SpreadsheetApp.open(spreadSheetFile).getActiveSheet();
-    return sheet.getDataRange().getValues()
+    var sheet = SpreadsheetApp.open(getAdminSpreadSheetFile(table)).getActiveSheet();
+    return sheet.getDataRange().getValues();
 }
+
 
 function update(table: Table) {
     // TODO
 }
 
-export function getSheetFile(table:Table):File {
-    return getFileUnderParentFolder(table, getAdminFolder());
-}
 
 
 function gatherRequest() {

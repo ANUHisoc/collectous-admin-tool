@@ -1,5 +1,6 @@
 
 import { REQUEST } from "../../common/schema";
+import { getAdminSpreadSheetFile } from "../drive";
 import * as  Sheets from "../sheets"
 
 
@@ -18,7 +19,7 @@ export function acceptRequests(gmailAddresses: string[]) {
 
 // TODO: consider data collectors to have multiple devices later
 function processRequest(gmailAddresses: string[], isAccepted: Boolean) {
-    var requestSheet = SpreadsheetApp.open(Sheets.getSheetFile("requests")).getActiveSheet();
+    var requestSheet = SpreadsheetApp.open(getAdminSpreadSheetFile("requests")).getActiveSheet();
     // transfer row to data collector and make sure that 
     Logger.log(gmailAddresses)
 

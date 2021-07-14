@@ -1,5 +1,5 @@
 import { makeObservable, observable, action, onBecomeObserved, onBecomeUnobserved, makeAutoObservable } from "mobx"
-import server from '../../utils/server';
+import server from '../server';
 
 const { serverFunctions } = server;
 

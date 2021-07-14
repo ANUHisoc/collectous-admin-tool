@@ -21,6 +21,7 @@ global.getData = publicSheetFunctions.getData;
 global.injectTemplates = publicDriveFunctions.injectTemplates;
 
 
+global.getLastModified = publicDriveFunctions.getLastModified;
 
 
 global.getUserEmail = publicUserFunctions.getUserEmail;

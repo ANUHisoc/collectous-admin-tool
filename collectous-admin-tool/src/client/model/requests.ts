@@ -1,16 +1,18 @@
 import { makeObservable, observable, action, onBecomeObserved, onBecomeUnobserved } from "mobx"
 
 import { prettyPrint } from './util'
-import server from '../server';
+
 import { Table } from "../../common/schema";
+import server from '../server';
+import {Repository} from "../data/repository"
 const { serverFunctions } = server;
 
 export class RequestModel {
     private interval: number
     
 
-    header: string[]
-    rows: string[][]
+    header: any[]
+    rows: any[][]
     isLoading: boolean
     isOptionsSelected: boolean
 
@@ -76,15 +78,14 @@ export class RequestModel {
     processData() {
         //TODO: extract folder ids.
 
-
-
     }
 
     fetchData = () => {
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
-            var requestTableName: Table = "requests"
-            serverFunctions.getData(requestTableName)
+            Repository
+            .getInstance()
+            .fetchData("requests")
                 .then(result => {
                     //console.log(result)
                     this.header = prettyPrint(result[0])

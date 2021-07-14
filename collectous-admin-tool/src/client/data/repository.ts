@@ -1,30 +1,85 @@
 
+import { InvalidPrimaryKey } from "../../common/error";
 import { Column, Table, SCHEMA } from "../../common/schema";
 import { isArrayEqual } from "../../common/util";
-/* TODO: 
-1) Fetch data only if last modified data has been changed and store it as cache here
-2) Consider Singleton pattern 
-*/
+import server from '../server';
 
-class Repository {
+const { serverFunctions } = server;
 
-    private  data!: {[table in Table]:object[][]};
+type SearchQuery = {
+    primarykey: Column[], value: any[];
+};
+
+export class Repository {
+
+    private static _instance: Repository = new Repository();
+    private dataObject!: { [table in Table]: { data: object[][], lastModified: Date } };
 
     private constructor() {
-        this.data = {
-            "requests":undefined,
-            "data-collector":undefined
+        if (Repository._instance) {
+            throw new Error("Dev error: Use Repository.getInstance() instead of new.");
+        }
+
+        Repository._instance = this;
+
+        this.dataObject = {
+            "requests": { data: undefined, lastModified: undefined },
+            "data-collector": { data: undefined, lastModified: undefined },
         }
     }
 
-    getRowIndex() {
 
+    public static getInstance(): Repository {
+        return Repository._instance;
     }
 
-    fetchData(table: Table) {
-        if(this.data[table]!==undefined){
+    private getRowIndex(table:Table,query:SearchQuery) {
+
+        if(isArrayEqual(SCHEMA[table].primaryKey,query.)){
             
         }
+        throw new InvalidPrimaryKey("Given primary key"+ query.primaryKey+" is invalid.")
+  
+    }
+
+    public async fetchData(table: Table): Promise<object[][]> {
+        var recentlastModified:Date = await this.fetchLastModified(table)
+       // console.log("this recent modified "+recentlastModified);
+       // console.log("this last modified "+this.dataObject[table].lastModified )
+        if (this.dataObject[table].lastModified === undefined
+            || recentlastModified > this.dataObject[table].lastModified) {
+
+           // console.log("Actually fetching data")
+            return serverFunctions.getData(table)
+                .then((result: object[][]) => {
+                    this.updateDataObject(table, result, recentlastModified)
+                    return result;
+               
+                });
+
+        } else {
+
+            //console.log("Returning cache")
+            return new Promise(() => { return this.dataObject[table].data })
+        }
+
+    }
+
+    private updateDataObject(table: Table, data?: object[][], lastModified?: Date) {
+        if (data !== undefined) {
+            this.dataObject[table].data = data
+        }
+        if (lastModified !== undefined) {
+            this.dataObject[table].lastModified = lastModified
+        }
+    }
+
+    private async fetchLastModified(table: Table): Promise<Date> {
+        return serverFunctions.
+            getLastModified(table)
+            .then((result:string)=> {
+            //    console.log("result: "+result)
+                return new Date(result)})
     }
 
 

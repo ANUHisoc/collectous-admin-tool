@@ -18,7 +18,16 @@ export class DataCorruptError extends Error {
 export class InvalidPrimaryKey extends Error{
     constructor(message: string) {
         super(message);
-        this.name = "DataCorruptError";
+        this.name = "InvalidPrimaryKey";
+    }
+
+
+}
+
+export class InvalidSearchQuery extends Error{
+    constructor(message: string) {
+        super(message);
+        this.name = "InvalidSearchQuery";
     }
 
 

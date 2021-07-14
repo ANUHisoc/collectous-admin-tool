@@ -30,8 +30,8 @@ export function getAdminFolder() {
 }
 
 
-export function getLastModified(table:Table): Date {
-    return getAdminSpreadSheetFile(table).getLastUpdated();
+export function getLastModified(table:Table):string {
+    return getAdminSpreadSheetFile(table).getLastUpdated().toString();
 }
 
 

@@ -23,7 +23,7 @@ export const SCHEMA: { [table in Table]: MetaData } =
     {
         table: "requests",
         columns: REQUEST,
-        primaryKey: ["gmail", "time_stamp"] // temporary
+        primaryKey: ["gmail"] // TODO: Possibly use time_stamp as well in case of the need for a history feature
     },
 
     "data-collector": {

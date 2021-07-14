@@ -21,7 +21,7 @@
 
 ### 🛠️ Tools used:
 
-- Framework/Libraries/APIs/Tools: React, Google app script, Mobx, Material-UI, MUI-Datatable and React-router.
+- Framework/Libraries/APIs/Tools: React, Google app script, Mobx, Material-UI, MUI-Datatable, Lodash and React-router.
 - Language(s): Typescript
 
 

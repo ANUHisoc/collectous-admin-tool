@@ -2,19 +2,19 @@ import { makeObservable, observable, action, onBecomeObserved, onBecomeUnobserve
 
 import { prettyPrint } from './util'
 
-import { Table } from "../../common/schema";
 import server from '../server';
-import {Repository} from "../data/repository"
+import { FetchedData, Repository, SearchQuery } from "../data/repository"
 const { serverFunctions } = server;
 
 export class RequestModel {
     private interval: number
-    
+    private isFetching: boolean
 
     header: any[]
     rows: any[][]
     isLoading: boolean
     isOptionsSelected: boolean
+
 
 
     constructor() {
@@ -30,6 +30,7 @@ export class RequestModel {
         })
         this.isLoading = true
         this.isOptionsSelected = false
+        this.isFetching = false;
         this.fetchData()
         onBecomeObserved(this, "rows", this.resume)
         onBecomeUnobserved(this, "rows", this.suspend)
@@ -41,26 +42,44 @@ export class RequestModel {
 
     accept(gmailAddresses: string[]) {
         //TODO: inject files to members  
+        console.log("accepting address" + gmailAddresses)
         for (let gmailAddress in gmailAddresses) {
-            serverFunctions.injectTemplates(gmailAddress)
+            serverFunctions
+                .injectTemplates(gmailAddress)
                 .then(result => {
                     console.log(result)
-
-
                 })
+                .then(this.removeRow(gmailAddress))
                 .catch(error => console.log(error))
         }
+
     }
 
-    reject() {
+    removeRow(gmailAddress: string) {
+        var repository = Repository.getInstance();
+        console.log("removing row" + gmailAddress)
+        var query: SearchQuery = { primaryKey: ["gmail"], value: [gmailAddress] };
+        var rowIndex = repository.getRowIndex("requests", query);
+        console.log(rowIndex)
+        // console.log(this.rows.splice(rowIndex, 1))
+        // this.rows = this.rows.splice(rowIndex, 1)
+        Repository
+            .getInstance()
+            .deleteRow("requests", query, rowIndex)
+    }
+
+
+    reject(gmailAddresses: string[]) {
         //TODO: Show Snackbars
+        console.log("rejecting row" + gmailAddresses)
+        gmailAddresses.forEach((gmailAddress) => this.removeRow(gmailAddress))
         console.log("rejected")
     }
 
     resume = () => {
         console.log("resume")
         this.fetchData()
-        this.interval = setInterval(() => this.fetchData(), 7500)
+        this.interval = setInterval(() => this.fetchData(), 20000)
     }
 
     suspend = () => {
@@ -72,28 +91,23 @@ export class RequestModel {
 
     }
 
-    /* Transferring some load from the server to the client, 
-       given that there are limitations on server operations and google could put extra limitations.
-       See limitations: https://developers.google.com/apps-script/guides/services/quotas#current_limitations */
-    processData() {
-        //TODO: extract folder ids.
-
-    }
 
     fetchData = () => {
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
-            Repository
-            .getInstance()
-            .fetchData("requests")
-                .then(result => {
-                    //console.log(result)
-                    this.header = prettyPrint(result[0])
-                    this.rows = result.splice(1)
-                    this.isLoading = false
-                })
-                .catch(error => console.error("Error retrieving request data " + error.toString()))
-
+            if (!this.isFetching) {
+                Repository
+                    .getInstance()
+                    .fetchData("requests")
+                    .then((data: FetchedData) => {
+                        // TODO: Check if data has changed or not before assigning value
+                        this.header = prettyPrint(data.columns)
+                        this.rows = data.rows
+                        this.isLoading = false
+                        this.isFetching = false
+                    })
+                    .catch(error => console.error("Error retrieving request data " + error.toString()))
+            }
         }
     }
 

@@ -8,14 +8,18 @@ import * as publicDriveFunctions from './drive'
 
 /* Expose public functions by attaching to `global`
    Note only functions can be retrieved at the client end: 
-   https://developers.google.com/apps-script/guides/html/communication
-*/
+   https://developers.google.com/apps-script/guides/html/communication  */
 
-/*TODO: Make use of custom responseStatus type for better error identification and communication.*/
+/* Transferring some load from the server to the client, 
+   given that there are limitations on server operations and google could put extra limitations.
+   See limitations: https://developers.google.com/apps-script/guides/services/quotas#current_limitations */
+
+
 global.doGet = publicUiFunctions.doGet;
 
 
 global.getData = publicSheetFunctions.getData;
+global.deleteRow = publicSheetFunctions.deleteRow;
 
 
 global.injectTemplates = publicDriveFunctions.injectTemplates;

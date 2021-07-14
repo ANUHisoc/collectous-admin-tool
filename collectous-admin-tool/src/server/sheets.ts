@@ -19,6 +19,10 @@ function insert(table: Table) {
     // TODO
 }
 
+export function deleteRow(table:Table,rowIndex:number){
+    var sheet = SpreadsheetApp.open(getAdminSpreadSheetFile(table)).getActiveSheet();
+    sheet.deleteRow(rowIndex);
+}
 
 function remove(table: Table, isEntireRow:boolean) {
 // TODO: Use Sheet deleteRow() if isEntireRow

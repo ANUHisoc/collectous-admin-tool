@@ -5,7 +5,7 @@ import {InvalidPrimaryKey} from "../../common/error"
 
 
 
-
+// Helper functions which do not cause any side effect
 
 
 

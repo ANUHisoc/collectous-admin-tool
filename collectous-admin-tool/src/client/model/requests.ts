@@ -1,16 +1,17 @@
 import { makeObservable, observable, action, onBecomeObserved, onBecomeUnobserved } from "mobx"
 
-import { prettyPrint } from './util'
+import { prettyPrintNames, prettyPrintName } from './util'
 
 import server from '../server';
 import { FetchedData, Repository, SearchQuery } from "../data/repository"
+import { Column } from "../../common/schema";
 const { serverFunctions } = server;
 
 export class RequestModel {
     private interval: number
-    private isFetching: boolean
+    private isDataShown: boolean
 
-    header: any[]
+    header: Column[]
     rows: any[][]
     isLoading: boolean
     isOptionsSelected: boolean
@@ -30,8 +31,9 @@ export class RequestModel {
         })
         this.isLoading = true
         this.isOptionsSelected = false
-        this.isFetching = false;
-        this.fetchData()
+        this.isDataShown = false;
+        this.header = []
+        this.rows = [[]]
         onBecomeObserved(this, "rows", this.resume)
         onBecomeUnobserved(this, "rows", this.suspend)
     }
@@ -42,7 +44,7 @@ export class RequestModel {
 
     accept(gmailAddresses: string[]) {
         //TODO: inject files to members  
-        console.log("accepting address" + gmailAddresses)
+        //console.log("accepting address" + gmailAddresses)
         gmailAddresses.forEach((gmailAddress) =>
             serverFunctions
                 .injectTemplates(gmailAddress)
@@ -79,34 +81,39 @@ export class RequestModel {
     }
 
     resume = () => {
-        console.log("resume")
+        //console.log("resume")
+        this.header = []
+        this.rows = [[]]
         this.fetchData()
         this.interval = setInterval(() => this.fetchData(), 7500)
     }
 
     suspend = () => {
-        console.log("suspend")
+        //console.log("suspend")
         this.header = undefined
         this.rows = undefined
         clearInterval(this.interval)
-        this.isLoading=true    
+        this.isLoading = true
+        this.isDataShown = false
     }
 
 
     fetchData(isForced = false) {
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
-            console.log("isForced " + isForced)
+            // console.log("isForced " + isForced)
             Repository
                 .getInstance()
-                .fetchData("requests", isForced)
-                .then((data) => {
+                .fetchData("requests", isForced,this.isDataShown)
+                .then((data: FetchedData) => {
                     // TODO: Check if data has changed or not before assigning value
-                    console.log(data)
-                    this.header = prettyPrint(data.columns)
-                    this.rows = data.rows
-                    this.isLoading = false
-                    this.isFetching = false
+                    // console.log(data)
+                    if (data !== undefined) {
+                        this.header = data.columns
+                        this.rows = data.rows
+                        this.isLoading = false
+                        this.isDataShown = true
+                    }
                 })
                 .catch(error => console.error("Error retrieving request data " + error.toString()))
 

@@ -1,6 +1,11 @@
 
 export const TABLES = ["requests", "data-collector"] as const;
-export const REQUEST = ["gmail", "name", "time_stamp", "folder_id"] as const;
+/* Will need folder id to identify folders uniquely; 
+    Why? 
+    Current getCollectorFolder() searches merely based on folder name; Imagine multiple folders have the same name GG.
+    However, when searching for collector folder intially, need to make sure 
+    TODO: will need to change the getCollectorFolder() server function accordingly as well */
+export const REQUEST = ["gmail", "name", "time_stamp", "folder_id"] as const; 
 export const DATA_COLLECTOR = ["gmail", "name", "time_stamp", "folder_id", "contact_number", "other_details"] as const;
 
 export type Table = typeof TABLES[number];

@@ -1,12 +1,11 @@
-import React, { SetStateAction, useEffect, useState } from "react";
+import React, { useState } from "react";
 import MUIDataTable from "mui-datatables";
 import CustomToolbarSelect from "../sub-components/custom-toolbar-select";
 
 import Loading from "../sub-components/loading"
 import { observer } from "mobx-react-lite"
 import { RequestModel } from "../model/requests";
-import { Column } from "../../common/schema";
-import { prettyPrint } from "../model/util";
+import { hideDataTableColumn } from "./util";
 
 
 
@@ -35,11 +34,19 @@ const RequestList = observer((props: React.PropsWithChildren<ComponentProps>) =>
     },
 
     customToolbarSelect: (selectedRows, displayData, setSelectedRows) => (
-      <CustomToolbarSelect selectedRows={selectedRows} displayData={displayData} setSelectedRows={setSelectedRows} model={model} />
+      <CustomToolbarSelect selectedRows={selectedRows}
+        displayData={displayData}
+        setSelectedRows={setSelectedRows}
+        model={model} />
     ),
   };
 
-  var dataTable = <MUIDataTable title={"Request list"} data={model.rows} columns={model.header} options={options} />
+
+
+  var dataTable = <MUIDataTable title={"Request list"}
+    data={model.rows}
+    columns={hideDataTableColumn(model.header.slice(), "folder_id")}
+    options={options} />
   return model.isLoading ? <Loading /> : dataTable
 
 });

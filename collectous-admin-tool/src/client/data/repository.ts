@@ -44,13 +44,13 @@ export class Repository {
     // Query uses primaryKey so there will only be one row.
     public getRowIndex(table: Table, query: SearchQuery) {
         var primaryKey = query.primaryKey
-        if (isPrimaryKey(table,primaryKey)) {
+        if (isPrimaryKey(table, primaryKey)) {
             var primaryKeyLength = primaryKey.length
             //console.log(query)
             if (query.value.length === primaryKeyLength) {
                 var rows = this.dataObject[table].data.rows
 
-                for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {                  
+                for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
                     // TODO used iterate though values in rows instead if performance is an issue
                     if (intersection(rows[rowIndex], query.value).length === primaryKeyLength) {
                         return rowIndex;
@@ -72,31 +72,48 @@ export class Repository {
         return serverFunctions.deleteRow(table, rowIndex + 2)
     }
 
-    public async fetchData(table: Table, isForced?: boolean): Promise<FetchedData> {
+    /**
+     * Fetches data asynchronously and assumes that caller is efficient and returns nothing if there are no changes.
+     * @param table 
+     * @param isForced 
+     * @param isEfficientFetch 
+     * @returns 
+     */
+    public async fetchData(table: Table, isForced?: boolean, isEfficientFetch =true): Promise<FetchedData> {
         var recentlastModified: Date = await this.fetchLastModified(table)
-        console.log("this recent modified " + recentlastModified);
-        console.log("this last modified " + this.dataObject[table].lastModified)
+        //console.log("this recent modified " + recentlastModified);
+        //console.log("this last modified " + this.dataObject[table].lastModified)
         if (isForced || this.dataObject[table].lastModified === undefined
             || recentlastModified > this.dataObject[table].lastModified) {
 
-            console.log("Actually fetching data")
+            //console.log("Actually fetching data")
             return serverFunctions.getData(table)
                 .then((result: object[][]) => {
                     this.updateDataObject(table, result, recentlastModified)
                     return this.dataObject[table].data;
-
                 });
 
-        } else {
+        } else if (isEfficientFetch) {
 
-            console.log("Returning cache")
-            return new Promise(
+            //console.log("Returning nothing")
+            return new Promise<FetchedData>(
+                (resolve, _reject: any) => {
+                    resolve(undefined)
+                }
+            ).then((result) => {
+                return result;
+            })
+        }
+        else {
+           // console.log("Returning cache")
+            return new Promise<FetchedData>(
                 (resolve, _reject: any) => {
                     resolve(this.dataObject[table].data)
                 }
-            ).then((result: FetchedData) => {
+            ).then((result) => {
                 return result;
             })
+
         }
     }
 

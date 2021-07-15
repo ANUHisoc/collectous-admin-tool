@@ -45,7 +45,7 @@ const RequestList = observer((props: React.PropsWithChildren<ComponentProps>) =>
 
   var dataTable = <MUIDataTable title={"Request list"}
     data={model.rows}
-    columns={hideDataTableColumn(model.header.slice(), "folder_id")}
+    columns={hideDataTableColumn(model.columns.slice(), "folder_id")}
     options={options} />
   return model.isLoading ? <Loading /> : dataTable
 

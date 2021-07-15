@@ -5,7 +5,7 @@ import { Column, Table, SCHEMA } from "../../common/schema";
 import { isArrayEqual } from "../../common/util";
 import server from '../server';
 import { intersection } from "lodash"
-import { isPrimaryKey } from "./repository-util";
+import {  getRowIndex, isPrimaryKey } from "./repository-util";
 
 const { serverFunctions } = server;
 
@@ -42,26 +42,10 @@ export class Repository {
     }
 
     // Query uses primaryKey so there will only be one row.
-    public getRowIndex(table: Table, query: SearchQuery) {
-        var primaryKey = query.primaryKey
-        if (isPrimaryKey(table, primaryKey)) {
-            var primaryKeyLength = primaryKey.length
-            //console.log(query)
-            if (query.value.length === primaryKeyLength) {
-                var rows = this.dataObject[table].data.rows
-
-                for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
-                    // TODO used iterate though values in rows instead if performance is an issue
-                    if (intersection(rows[rowIndex], query.value).length === primaryKeyLength) {
-                        return rowIndex;
-                    }
-                }
-            }
-
-            throw new InvalidSearchQuery("Given query is " + query.toString())
-        }
-        throw new InvalidPrimaryKey("Given primary key" + primaryKey + " is invalid.")
-    }
+// Helper functions which do not cause any side effect
+ public getRowIndex(table: Table, query: SearchQuery):number {
+    return getRowIndex(table,query,this.dataObject[table].data)
+}
 
 
     public deleteRow(table: Table, query: SearchQuery, rowIndex?: number): Promise<void> {
@@ -79,41 +63,31 @@ export class Repository {
      * @param isEfficientFetch 
      * @returns 
      */
-    public async fetchData(table: Table, isForced?: boolean, isEfficientFetch =true): Promise<FetchedData> {
-        var recentlastModified: Date = await this.fetchLastModified(table)
-        //console.log("this recent modified " + recentlastModified);
+    public async fetchData(table: Table, isForced?: boolean, isEfficientFetch = true): Promise<FetchedData> {
+        var recentLastModified: Date = await this.fetchLastModified(table)
+        //console.log("this recent modified " + recentastModified);
         //console.log("this last modified " + this.dataObject[table].lastModified)
         if (isForced || this.dataObject[table].lastModified === undefined
-            || recentlastModified > this.dataObject[table].lastModified) {
+            || recentLastModified > this.dataObject[table].lastModified) {
 
             //console.log("Actually fetching data")
             return serverFunctions.getData(table)
                 .then((result: object[][]) => {
-                    this.updateDataObject(table, result, recentlastModified)
+                    this.updateDataObject(table, result, recentLastModified)
                     return this.dataObject[table].data;
                 });
 
-        } else if (isEfficientFetch) {
-
-            //console.log("Returning nothing")
-            return new Promise<FetchedData>(
-                (resolve, _reject: any) => {
-                    resolve(undefined)
-                }
-            ).then((result) => {
-                return result;
-            })
-        }
+        } 
         else {
-           // console.log("Returning cache")
+            var data = isEfficientFetch? undefined : this.dataObject[table].data
+           // console.log("Returning cache or nothing")
             return new Promise<FetchedData>(
                 (resolve, _reject: any) => {
-                    resolve(this.dataObject[table].data)
+                    resolve(data)
                 }
             ).then((result) => {
                 return result;
             })
-
         }
     }
 

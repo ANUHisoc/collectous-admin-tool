@@ -19,6 +19,8 @@ import { RequestModel } from '../model/requests';
 import { UserValidationModel } from '../model/user-validation';
 import { responsiveFontSizes } from '@material-ui/core/styles';
 import { observer } from 'mobx-react-lite';
+import Repair from './repair';
+import { SnackbarProvider } from 'notistack';
 
 
 /* Reference: Uses responsive navbar boilerplate code*/
@@ -46,7 +48,7 @@ let useStyles = makeStyles(theme => ({
   }
 }));
 
-// TODO add repair component
+
 const ROUTE_PATHS: JSX.Element = (
   <div className="content">
     <Route exact path='/' component={Home} />
@@ -56,6 +58,7 @@ const ROUTE_PATHS: JSX.Element = (
     <Route path="/collectors" component={Collectors} />
     <Route path="/update-form" component={UpdateForm} />
     <Route path="/analysis" component={Analysis} />
+    <Route path="/repair" component={Repair} />
     <Route path="/settings" component={Settings} />
   </div>);
 
@@ -68,7 +71,6 @@ const App = observer((props: React.PropsWithChildren<any>) => {
 
   var theme = useTheme()
   var [isMobileOpen, setIsMobileOpen] = useState(false);
-  var [isUserValidated, setIsUserValidated] = useState(false)
 
   var handleDrawerToggle = () => {
     setIsMobileOpen(!isMobileOpen);
@@ -96,7 +98,9 @@ const App = observer((props: React.PropsWithChildren<any>) => {
 
   return (
     <ThemeProvider theme={THEME}>
-      {USER_VALIDATION_MODEL.isValidUser ? appContent : userValidationContent}
+      <SnackbarProvider>
+        {USER_VALIDATION_MODEL.isValidUser ? appContent : userValidationContent}
+      </SnackbarProvider>
     </ThemeProvider>
   );
 })

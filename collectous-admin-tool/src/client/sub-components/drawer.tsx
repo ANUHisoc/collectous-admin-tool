@@ -14,6 +14,7 @@ import GroupIcon from '@material-ui/icons/Group';
 import ListAltRoundedIcon from '@material-ui/icons/ListAltRounded';
 import SettingsIcon from '@material-ui/icons/Settings';
 import AssessmentIcon from '@material-ui/icons/Assessment';
+import RepairIcon from  '@material-ui/icons/Build';
 
 const useStyles = makeStyles(theme => ({
     drawer: {
@@ -40,6 +41,7 @@ const NAMES_ICONS: { [id: string]: JSX.Element } = {
     "Collectors": <GroupIcon />,
     "Update Form": <ListAltRoundedIcon />,
     "Analysis": <AssessmentIcon />,
+    "Repair":<RepairIcon/>,
     "Settings": <SettingsIcon />,
 };
 

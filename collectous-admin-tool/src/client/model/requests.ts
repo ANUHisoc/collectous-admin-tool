@@ -5,22 +5,20 @@ import { prettyPrintNames, prettyPrintName } from './util'
 import server from '../server';
 import { FetchedData, Repository, SearchQuery } from "../data/repository"
 import { Column } from "../../common/schema";
+import { getRowIndex } from "../data/repository-util";
 const { serverFunctions } = server;
 
 export class RequestModel {
     private interval: number
     private isDataShown: boolean
-
-    header: Column[]
-    rows: any[][]
+     columns:Column[]
+    rows:any[][]
     isLoading: boolean
     isOptionsSelected: boolean
 
-
-
     constructor() {
         makeObservable(this, {
-            header: observable,
+            columns: observable,
             rows: observable,
             isLoading: observable,
             isOptionsSelected: observable,
@@ -32,40 +30,64 @@ export class RequestModel {
         this.isLoading = true
         this.isOptionsSelected = false
         this.isDataShown = false;
-        this.header = []
+        this.columns = []
         this.rows = [[]]
         onBecomeObserved(this, "rows", this.resume)
         onBecomeUnobserved(this, "rows", this.suspend)
     }
 
+
+    resume = () => {
+        //console.log("resume")
+        this.columns=[]
+        this.rows=[[]]
+        this.fetchData()
+        this.interval = setInterval(() => this.fetchData(), 7500)
+    }
+
+
+    suspend = () => {
+        //console.log("suspend")
+        this.columns= undefined
+        this.rows= undefined
+        clearInterval(this.interval)
+        this.isLoading = true
+        this.isDataShown = false
+    }
+
+
     updateIsOptionsSelected(selectedRows: []) {
         this.isOptionsSelected = selectedRows.length !== 0
     }
 
-    accept(gmailAddresses: string[]) {
+
+    async accept(gmailAddresses: string[]) {
         //TODO: inject files to members  
         //console.log("accepting address" + gmailAddresses)
+        var result = true;
         gmailAddresses.forEach((gmailAddress) =>
             serverFunctions
                 .injectTemplates(gmailAddress)
                 .then(result => {
-                    console.log(result)
+                    this.removeRow(gmailAddress)
+                    
                 })
-                .then(this.removeRow(gmailAddress))
                 .catch(error => console.log(error)))
-
-
-
     }
 
-    async removeRow(gmailAddress: string) {
-        var repository = Repository.getInstance();
+    async reject(gmailAddresses: string[]) {
+        //TODO: Show Snackbars
+        console.log("rejecting row" + gmailAddresses)
+        gmailAddresses.forEach((gmailAddress) => this.removeRow(gmailAddress))
+        console.log("rejected")
+    }
+
+    private async removeRow(gmailAddress: string) {
         console.log("removing row" + gmailAddress)
         var query: SearchQuery = { primaryKey: ["gmail"], value: [gmailAddress] };
-        var rowIndex = repository.getRowIndex("requests", query);
+        var rowIndex = Repository.getInstance().getRowIndex("requests",query)
         console.log(rowIndex)
-        // console.log(this.rows.splice(rowIndex, 1))
-        // this.rows = this.rows.splice(rowIndex, 1)
+        this.rows = this.rows.filter((_value,index)=>{ return index!=rowIndex})
         await Repository
             .getInstance()
             .deleteRow("requests", query, rowIndex)
@@ -73,32 +95,9 @@ export class RequestModel {
     }
 
 
-    reject(gmailAddresses: string[]) {
-        //TODO: Show Snackbars
-        console.log("rejecting row" + gmailAddresses)
-        gmailAddresses.forEach((gmailAddress) => this.removeRow(gmailAddress))
-        console.log("rejected")
-    }
-
-    resume = () => {
-        //console.log("resume")
-        this.header = []
-        this.rows = [[]]
-        this.fetchData()
-        this.interval = setInterval(() => this.fetchData(), 7500)
-    }
-
-    suspend = () => {
-        //console.log("suspend")
-        this.header = undefined
-        this.rows = undefined
-        clearInterval(this.interval)
-        this.isLoading = true
-        this.isDataShown = false
-    }
 
 
-    fetchData(isForced = false) {
+    private fetchData(isForced = false) {
         console.log("Fetching data")
         if (!this.isOptionsSelected) {
             // console.log("isForced " + isForced)
@@ -109,7 +108,7 @@ export class RequestModel {
                     // TODO: Check if data has changed or not before assigning value
                     // console.log(data)
                     if (data !== undefined) {
-                        this.header = data.columns
+                        this.columns = data.columns
                         this.rows = data.rows
                         this.isLoading = false
                         this.isDataShown = true

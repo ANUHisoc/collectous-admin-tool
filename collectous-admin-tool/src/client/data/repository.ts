@@ -5,6 +5,7 @@ import { Column, Table, SCHEMA } from "../../common/schema";
 import { isArrayEqual } from "../../common/util";
 import server from '../server';
 import { intersection } from "lodash"
+import { isPrimaryKey } from "./repository-util";
 
 const { serverFunctions } = server;
 
@@ -43,14 +44,16 @@ export class Repository {
     // Query uses primaryKey so there will only be one row.
     public getRowIndex(table: Table, query: SearchQuery) {
         var primaryKey = query.primaryKey
-        if (isArrayEqual(SCHEMA[table].primaryKey, primaryKey)) {
+        if (isPrimaryKey(table,primaryKey)) {
             var primaryKeyLength = primaryKey.length
-            console.log(query)
+            //console.log(query)
             if (query.value.length === primaryKeyLength) {
                 var rows = this.dataObject[table].data.rows
-                for (let i = 0; i < rows.length; i++) {
-                    if (intersection(rows[i], query.value).length === primaryKeyLength) {
-                        return i;
+
+                for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {                  
+                    // TODO used iterate though values in rows instead if performance is an issue
+                    if (intersection(rows[rowIndex], query.value).length === primaryKeyLength) {
+                        return rowIndex;
                     }
                 }
             }
@@ -65,6 +68,7 @@ export class Repository {
         if (rowIndex === undefined) {
             rowIndex = this.getRowIndex(table, query)
         }
+        // Adding 2 cause of the header and G sheet index schematics
         return serverFunctions.deleteRow(table, rowIndex + 2)
     }
 
@@ -86,13 +90,13 @@ export class Repository {
         } else {
 
             console.log("Returning cache")
-            return new Promise(() => {
-                (resolve, reject: any) => {
-                    console.log(this.dataObject[table].data)
-                    return this.dataObject[table].data;
+            return new Promise(
+                (resolve, _reject: any) => {
+                    resolve(this.dataObject[table].data)
                 }
+            ).then((result: FetchedData) => {
+                return result;
             })
-
         }
     }
 

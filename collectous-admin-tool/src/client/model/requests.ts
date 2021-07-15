@@ -89,7 +89,7 @@ export class RequestModel {
         this.header = undefined
         this.rows = undefined
         clearInterval(this.interval)
-        this.isLoading = true
+        this.isLoading=true    
     }
 
 

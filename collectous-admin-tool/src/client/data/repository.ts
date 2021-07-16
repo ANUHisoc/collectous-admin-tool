@@ -105,7 +105,6 @@ export class Repository {
         return serverFunctions.
             getLastModified(table)
             .then((result: string) => {
-                //    console.log("result: "+result)
                 return new Date(result)
             })
     }

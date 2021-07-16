@@ -31,7 +31,7 @@ const REQUEST_MODEL = new RequestModel()
 const USER_VALIDATION_MODEL = new UserValidationModel()
 
 const THEME = responsiveFontSizes(createTheme({
-  typography: { fontFamily: ['Roboto', 'Nunito', 'sans-serif'].join(','), }
+  typography: { fontFamily: ['Roboto', 'Nunito', 'sans-serif'].join(','), },
 }));
 
 export const DRAWER_WIDTH = 220;
@@ -98,7 +98,7 @@ const App = observer((props: React.PropsWithChildren<any>) => {
 
   return (
     <ThemeProvider theme={THEME}>
-      <SnackbarProvider>
+      <SnackbarProvider maxSnack={1}>
         {USER_VALIDATION_MODEL.isValidUser ? appContent : userValidationContent}
       </SnackbarProvider>
     </ThemeProvider>

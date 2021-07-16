@@ -15,14 +15,14 @@ const useStyles = makeStyles({
 })
 
 function CustomToolbarSelect(props) {
-
+  var notificationKey;
   var classes = useStyles();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
-  function getSelectedGmailAddress():string[] {
+  function getSelectedGmailAddress(): string[] {
     var selectedGmailAddresses = [];
-    var gmailColumn:Column = "gmail"
-    var columnIndex:number = SCHEMA["requests"].columns.indexOf(gmailColumn)
+    var gmailColumn: Column = "gmail"
+    var columnIndex: number = SCHEMA["requests"].columns.indexOf(gmailColumn)
     props.displayData.forEach((row, index) => {
       if (props.selectedRows.data.find(selectedRow => selectedRow.dataIndex === index)) {
         selectedGmailAddresses.push(row.data[columnIndex]);
@@ -37,32 +37,53 @@ function CustomToolbarSelect(props) {
     //console.log(getSelectedGmailAddress())
     props.setSelectedRows([]);
     handleRequests()
-    props.model.reject(getSelectedGmailAddress())
+    props.model.rejectRequests(getSelectedGmailAddress())
+      .then((isSuccessful: boolean) => {
+        showUpdateMessage(isSuccessful)
+      })
+      .catch(error=> console.log(error))
   };
 
-  function handleRequests(){
+  function showUpdateMessage(isSuccessful: boolean) {
+    closeSnackbar(notificationKey)
+    if (isSuccessful) {
+      enqueueSnackbar("Successfuly updated the backend.", { variant: 'success',
+      autoHideDuration: 2000, })
+    }
+    else {
+      enqueueSnackbar("Something wrong happened.", { variant: 'error',
+      autoHideDuration: 2000,  })
+    }
+  }
+
+  function handleRequests() {
     props.setSelectedRows([]);
-    enqueueSnackbar("Processing changes in the backend.", { 
+   notificationKey =  enqueueSnackbar("Processing changes in the backend.", {
       variant: 'info',
-  })
+      persist: true,
+    })
   }
 
   var handleAcceptRequests = () => {
     //console.log(props.model)
     handleRequests()
-    props.model.accept(getSelectedGmailAddress())
+    props.model.acceptRequests(getSelectedGmailAddress())
+      .then((isSuccessful: boolean) => {
+        showUpdateMessage(isSuccessful)
+      })
+      .catch(error=> console.log(error))
   };
 
   return (
     <div className={classes.iconContainer}>
 
-        <IconButton onClick={handleRejectRequests}>
-          <RejectIcon />
-        </IconButton>
+      <IconButton onClick={handleRejectRequests}>
+        <RejectIcon />
+      </IconButton>
 
-        <IconButton onClick={handleAcceptRequests}>
-          <ApproveIcon />
-        </IconButton>
+      <IconButton onClick={handleAcceptRequests}>
+        <ApproveIcon />
+      </IconButton>
 
     </div>
   );

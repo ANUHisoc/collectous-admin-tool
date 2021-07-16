@@ -1,3 +1,4 @@
+import { InvalidResourceError } from "../common/error";
 import { Table } from "../common/schema";
 import { FOLDER_MIME_TYPE, getFolderUnderParentFolder, getParentFolder, getCurrentScriptFile, copyContent, getFileUnderParentFolder } from "./drive-utils";
 import Folder = GoogleAppsScript.Drive.Folder;
@@ -20,6 +21,9 @@ export function getCollectorFolder(gmailAddress: string):  Folder {
         "sharedWithMe and title contains '" + APP_NAME + "' and mimeType = '" + FOLDER_MIME_TYPE + "'" + "and '" + gmailAddress + "' in owners")
     if (folderIterator.hasNext()) {
         return folderIterator.next();
+    }
+    else{
+        throw new InvalidResourceError("No such folder")
     }
 }
 

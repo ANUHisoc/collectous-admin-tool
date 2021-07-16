@@ -8,11 +8,17 @@ import { Column } from "../../common/schema";
 import { getRowIndex } from "../data/repository-util";
 const { serverFunctions } = server;
 
+
+const FETCHING_INTERVAL_TIME = 7500 
+const VOID_PROCESSING_INTERVAL_TIME = 2500 
+
+type MetaData = {gmailAddress:string,query:SearchQuery,rowIndex:number}
 export class RequestModel {
     private interval: number
     private isDataShown: boolean
-     columns:Column[]
-    rows:any[][]
+    
+    columns: Column[]
+    rows: any[][]
     isLoading: boolean
     isOptionsSelected: boolean
 
@@ -22,8 +28,8 @@ export class RequestModel {
             rows: observable,
             isLoading: observable,
             isOptionsSelected: observable,
-            accept: action,
-            reject: action,
+            acceptRequest: action,
+            rejectRequest: action,
             resume: false,
             suspend: false
         })
@@ -39,8 +45,8 @@ export class RequestModel {
 
     resume = () => {
         //console.log("resume")
-        this.columns=[]
-        this.rows=[[]]
+        this.columns = []
+        this.rows = [[]]
         this.fetchData()
         this.interval = setInterval(() => this.fetchData(), 7500)
     }
@@ -48,8 +54,8 @@ export class RequestModel {
 
     suspend = () => {
         //console.log("suspend")
-        this.columns= undefined
-        this.rows= undefined
+        this.columns = undefined
+        this.rows = undefined
         clearInterval(this.interval)
         this.isLoading = true
         this.isDataShown = false
@@ -61,36 +67,70 @@ export class RequestModel {
     }
 
 
-    async accept(gmailAddresses: string[]) {
+    async acceptRequests(gmailAddresses: string[]): Promise<boolean> {
         //TODO: inject files to members  
         //console.log("accepting address" + gmailAddresses)
-        var result = true;
-        gmailAddresses.forEach((gmailAddress) =>
-            serverFunctions
-                .injectTemplates(gmailAddress)
-                .then(result => {
-                    this.removeRow(gmailAddress)
-                    
-                })
-                .catch(error => console.log(error)))
+        var gmailAddressMetaData = this.getMetaDataForRequestUpdate(gmailAddresses)
+        const promises = gmailAddressMetaData.map(async metaData => {
+           return await this.acceptRequest(metaData)
+        })
+        await this.pause(VOID_PROCESSING_INTERVAL_TIME)
+        return Promise.all(promises)
+            .then(() => { return true; })
+           .catch(()=>{ return false;})
+        
     }
 
-    async reject(gmailAddresses: string[]) {
+    acceptRequest(metadata:MetaData) {
+        return serverFunctions.injectTemplates(metadata.gmailAddress)
+            .then(this.removeRow(metadata))
+            .catch((error: any)=> { throw error})
+    }
+
+
+    async rejectRequests(gmailAddresses: string[]): Promise<boolean> {
         //TODO: Show Snackbars
         console.log("rejecting row" + gmailAddresses)
-        gmailAddresses.forEach((gmailAddress) => this.removeRow(gmailAddress))
-        console.log("rejected")
+        var gmailAddressMetaData = this.getMetaDataForRequestUpdate(gmailAddresses)
+        const promises = gmailAddressMetaData.map(async metaData => {
+            this.rejectRequest(metaData)
+        })
+        await this.pause(VOID_PROCESSING_INTERVAL_TIME)
+        return Promise.all(promises).
+            then(() => { return true })
+            .catch(() => { return false })
     }
 
-    private async removeRow(gmailAddress: string) {
-        console.log("removing row" + gmailAddress)
-        var query: SearchQuery = { primaryKey: ["gmail"], value: [gmailAddress] };
-        var rowIndex = Repository.getInstance().getRowIndex("requests",query)
-        console.log(rowIndex)
-        this.rows = this.rows.filter((_value,index)=>{ return index!=rowIndex})
+
+    rejectRequest(metadata:{gmailAddress:string,query:SearchQuery,rowIndex:number}) {
+        return new Promise<void>((resolve) => {
+            this.removeRow(metadata)
+            resolve()
+        }).catch((error: any)=> { throw error})
+    }
+
+    pause(time:number) {
+        return new Promise(resolve =>
+             setTimeout(resolve, time));
+      }
+
+    getMetaDataForRequestUpdate(gmailAddresses:string[]){
+        return gmailAddresses.map(gmailAddress => {
+            var query: SearchQuery = { primaryKey: ["gmail"], value: [gmailAddress] };
+            var rowIndex = Repository.getInstance().getRowIndex("requests", query)
+            console.log(rowIndex)
+            this.rows = this.rows.filter((_value, index) => { return index != rowIndex })
+            return {gmailAddress:gmailAddress, query:query,rowIndex:rowIndex}
+        });
+    }
+
+
+
+    private async removeRow(metaData:MetaData) {
+        console.log("removing row" + metaData.gmailAddress)
         await Repository
             .getInstance()
-            .deleteRow("requests", query, rowIndex)
+            .deleteRow("requests", metaData.query, metaData.rowIndex)
         this.fetchData(true)
     }
 
@@ -103,7 +143,7 @@ export class RequestModel {
             // console.log("isForced " + isForced)
             Repository
                 .getInstance()
-                .fetchData("requests", isForced,this.isDataShown)
+                .fetchData("requests", isForced, this.isDataShown)
                 .then((data: FetchedData) => {
                     // TODO: Check if data has changed or not before assigning value
                     // console.log(data)
